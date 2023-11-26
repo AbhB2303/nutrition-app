@@ -33,7 +33,7 @@ function App() {
   const getFoodsInCategory = async (category, id) => {
     setChosenCategory(id);
     const response = await axios.get(
-      `${REACT_API_SERVER_URL}/foods_in_category/${category}`
+      `${REACT_API_SERVER_URL}/foods/${category}`
     );
     setFoodsInCategory(response.data);
   };
