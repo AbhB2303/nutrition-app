@@ -5,17 +5,18 @@ import Button from "@mui/material/Button";
 import SelectSmall from "./Components/units_dropdown";
 import TextField from "@mui/material/TextField";
 
-const REACT_API_SERVER_URL = process.env.REACT_API_SERVER_URL;
-
 function App() {
+  const REACT_API_SERVER_URL = process.env.REACT_APP_API_SERVER_URL;
   // States
   const [InitialAction, setInitialAction] = useState(null);
-
+  // 25 broad categories to initially choose from
   const [foodCategories, setFoodCategories] = useState(null);
+
   const [foodsInCategory, setFoodsInCategory] = useState(null);
+  const [FoodTypes, setFoodTypes] = useState(null);
+  // Values picked in submission
   const [ChosenCategory, setChosenCategory] = useState(null);
   const [ChosenFood, setChosenFood] = useState(null);
-  const [FoodTypes, setFoodTypes] = useState(null);
   const [ChosenFoodType, setChosenFoodType] = useState(null);
 
   const [MealsList, setMealsList] = useState([]);
@@ -25,14 +26,16 @@ function App() {
   const [Unit, setUnit] = useState("");
 
   const api_call = async () => {
-    const response = await axios.get("http://127.0.0.1:5000/food_categories");
-    console.log(response.data);
+    console.log(REACT_API_SERVER_URL);
+    const response = await axios.get(`${REACT_API_SERVER_URL}/food_categories`);
     setFoodCategories(response.data);
   };
 
   const getFoodsInCategory = async (category, id) => {
     setChosenCategory(id);
-    const response = await axios.get("http://127.0.0.1:5000/foods/" + category);
+    const response = await axios.get(
+      `${REACT_API_SERVER_URL}/foods_in_category/${category}`
+    );
     setFoodsInCategory(response.data);
     console.log(response);
   };
