@@ -26,7 +26,6 @@ function App() {
   const [Unit, setUnit] = useState("");
 
   const api_call = async () => {
-    console.log(REACT_API_SERVER_URL);
     const response = await axios.get(`${REACT_API_SERVER_URL}/food_categories`);
     setFoodCategories(response.data);
   };
@@ -37,7 +36,6 @@ function App() {
       `${REACT_API_SERVER_URL}/foods_in_category/${category}`
     );
     setFoodsInCategory(response.data);
-    console.log(response);
   };
 
   const AddToMeal = async (category, food, foodType, servingSize, unit) => {
