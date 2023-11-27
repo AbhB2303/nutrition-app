@@ -3,7 +3,7 @@ import { useZxing } from "react-zxing";
 import axios from "axios";
 import { useEffect } from "react";
 
-export const BarcodeScanner = ({ toggleCamera, setCreateType }) => {
+export const BarcodeScanner = () => {
   const REACT_API_SERVER_URL = process.env.REACT_APP_API_SERVER_URL;
   const [result, setResult] = useState("");
   const [isCameraOn, setIsCameraOn] = useState(false); // New state for camera status
@@ -59,13 +59,18 @@ export const BarcodeScanner = ({ toggleCamera, setCreateType }) => {
   }, [isCameraOn]);
 
   return (
-    <div>
+    <div
+      style={{
+        textAlign: "center",
+        margin: "auto",
+      }}
+    >
       <h1>Place item within view of your camera</h1>
       <video
         autoPlay
         muted
         ref={ref}
-        style={{ width: "30%", margin: "50px" }}
+        style={{ width: "50%" }}
         hidden={result}
       />
       {result && (

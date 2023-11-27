@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import "./Home.css";
 import { MealsList } from "../../Components/MealsList/MealsList";
-import { TransitionsModal } from "../../Components/TransitionsModal";
+import { TransitionsModal } from "../../Components/Modal/TransitionsModal";
 
 export const Home = () => {
   const [open, setOpen] = useState(false);

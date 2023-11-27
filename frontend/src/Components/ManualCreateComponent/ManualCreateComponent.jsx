@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import SelectSmall from "../units_dropdown";
 import Typography from "@mui/material/Typography";
 
-export const ManualCreateComponent = ({ setCreateType }) => {
+export const ManualCreateComponent = () => {
   const REACT_API_SERVER_URL = process.env.REACT_APP_API_SERVER_URL;
 
   // 25 broad categories to initially choose from
@@ -106,7 +106,11 @@ export const ManualCreateComponent = ({ setCreateType }) => {
           </Button>
         </div>
         <div hidden={(InputFormCompleted && IngrediantAdded) || !NameIsSet}>
-          <Typography variant="h6" component="h2">
+          <Typography
+            variant="h6"
+            component="h2"
+            hidden={ChosenFoodType !== null}
+          >
             Now let's start adding some ingredients to {MealName}:
           </Typography>
         </div>
@@ -163,53 +167,50 @@ export const ManualCreateComponent = ({ setCreateType }) => {
             ))}
         </div>
       </div>
-      <div hidden={!ChosenFoodType || IngrediantAdded}>
-        <p>Food Details</p>
-        <div>
-          <p>Category: {ChosenCategory}</p>
-          <p>Food Name: {ChosenFood}</p>
-          <p>Food Type: {ChosenFoodType}</p>
-        </div>
-      </div>
-
-      <div hidden={!ChosenFoodType || IngrediantAdded}>
-        <p>Serving Size</p>
-        <div
-          style={{
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          <TextField
-            id="outlined-basic"
-            label="Amount"
-            variant="outlined"
-            onChange={(e) => setServingSize(e.target.value)}
-          />
-
-          <p>Unit: </p>
-          <SelectSmall unit={Unit} setUnit={setUnit} />
-        </div>
-        <Button
-          variant="contained"
-          sx={{ m: 1 }}
-          onClick={() => {
-            AddToMeal(
-              ChosenCategory,
-              ChosenFood,
-              ChosenFoodType,
-              ServingSize,
-              Unit
-            );
-            setIngrediantAdded(true);
-          }}
-        >
-          Add to Meal
-        </Button>
-      </div>
+      {ChosenFoodType !== null &&
+        InputFormCompleted &&
+        IngrediantAdded === false && (
+          <div
+            style={{
+              gap: "10px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <p>Confirm Ingredient Details:</p>
+            <div>
+              <p>Category: {ChosenCategory}</p>
+              <p>Food Name: {ChosenFood}</p>
+              <p>Food Type: {ChosenFoodType}</p>
+            </div>
+            <div>
+              <TextField
+                id="outlined-basic"
+                label="Amount"
+                onChange={(e) => setServingSize(e.target.value)}
+              />
+              <div>
+                <SelectSmall unit={Unit} setUnit={setUnit} />
+              </div>
+            </div>
+            <Button
+              onClick={() => {
+                AddToMeal(
+                  ChosenCategory,
+                  ChosenFood,
+                  ChosenFoodType,
+                  ServingSize,
+                  Unit
+                );
+                setIngrediantAdded(true);
+              }}
+            >
+              Add to Meal
+            </Button>
+          </div>
+        )}
       <div hidden={!NameIsSet}>
         <p>Meal Name: {MealName}</p>
         {(MealIngredients.length > 0 && (
@@ -232,8 +233,6 @@ export const ManualCreateComponent = ({ setCreateType }) => {
                   <td>{meal.unit}</td>
                   <td>
                     <Button
-                      variant="contained"
-                      sx={{ m: 1 }}
                       onClick={() => {
                         setMealIngredients(
                           MealIngredients.filter(
@@ -274,19 +273,22 @@ export const ManualCreateComponent = ({ setCreateType }) => {
           >
             Clear All Ingredients
           </Button>
+          <div hidden={IngrediantAdded === false}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                const meal = {
+                  MealName: MealName,
+                  MealIngredients: MealIngredients,
+                };
+                createMealRecord(meal);
+                ResetMeal();
+              }}
+            >
+              Finish Building Meal
+            </Button>
+          </div>
         </div>
-        <Button
-          onClick={() => {
-            const meal = {
-              MealName: MealName,
-              MealIngredients: MealIngredients,
-            };
-            createMealRecord(meal);
-            ResetMeal();
-          }}
-        >
-          Log Meal
-        </Button>
       </div>
     </div>
   );
