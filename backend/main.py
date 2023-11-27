@@ -3,6 +3,8 @@ from flask_cors import CORS
 from flask import Flask
 from db import MongoDB
 from flask import jsonify
+import requests
+import json
 
 
 def create_app():
@@ -34,6 +36,20 @@ def create_app():
     def get_foods(category):
         foods = app.mongo.get_foods(category)
         return jsonify(foods)
+
+    @app.route('/scan/<upc>')
+    def get_nutrition_info(upc):
+        headers = {
+            'x-app-id': "f8499843",
+            'x-app-key': "6122254cc1b366d473e77828810a74b7",
+            'x-remote-user-id': '0',
+        }
+
+        url = "https://trackapi.nutritionix.com/v2/search/item?upc=" + upc
+        response = requests.request("GET", url, headers=headers)
+        print(response.text)
+        json_data = json.loads(response.text)
+        return json_data
 
     return app
 

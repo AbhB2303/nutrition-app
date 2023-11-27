@@ -1,0 +1,89 @@
+
+.home-container {
+    flex-direction: row;
+    justify-content: space-between;
+    display: flex;
+}
+
+.side-bar {
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+    height: 85vh;
+    text-align: center;
+    font-size: calc(3px + 2vmin);
+}
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.01rem rgb(214, 214, 214) solid;
+    width: 99%;
+    height: 30vh;
+    box-shadow: 0 2px 3px #ccc;
+}
+
+.side-bar-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.01rem rgb(214, 214, 214) solid;
+    width: 99%;
+    height: 10vh;
+}
+
+.home-options {
+    display: flex;
+    justify-content: right;
+}
+
+.home-title {
+    margin: 1rem;
+    display: flex;
+    justify-content: left;
+}
+
+.home-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.home-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.meals-saved-list {
+    margin: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 2px solid #ccc;
+    width: 30%;
+    height: 30vh;
+    box-shadow: 0 2px 3px #ccc;
+}
+
+.graph-1 {
+    margin: 1rem;
+    display: flex;
+    border: 2px solid #ccc;
+    width: 49%;
+    box-shadow: 0 2px 3px #ccc;
+    justify-content: center;
+    align-items: center;
+}
+
+.graph-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 40vh;
+}
