@@ -18,11 +18,12 @@ export const MealsList = ({ ListOfMeals }) => {
   };
 
   return (
-    <div style={{ textAlign: "center", margin: "auto" }}>
+    <div style={{ textAlign: "left" }}>
       <h1
         style={{
-          textAlign: "center",
+          textAlign: "left",
           fontSize: "20px",
+          marginLeft: "20px",
         }}
       >
         Recent Meals
@@ -34,6 +35,7 @@ export const MealsList = ({ ListOfMeals }) => {
             onClick={() => {
               getNutritionInfo(meal._id);
             }}
+            id={meal._id}
           >
             {meal.MealName}
           </Button>

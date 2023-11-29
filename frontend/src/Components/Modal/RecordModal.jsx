@@ -35,7 +35,7 @@ export const RecordModal = ({ open, setOpen }) => {
   const handleClose = () => setOpen(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [value, setValue] = useState(new Date());
-  const [mealType, setMealType] = useState(null);
+  const [mealType, setMealType] = useState("");
   const [listOfMeals, setListOfMeals] = useState([]);
   const { user } = useAuth0();
 
@@ -47,10 +47,9 @@ export const RecordModal = ({ open, setOpen }) => {
     axios
       .get(`${process.env.REACT_APP_API_SERVER_URL}/get_meals/${user.email}`)
       .then((res) => {
-        console.log(res.data);
         setListOfMeals(res.data);
       });
-  }, []);
+  }, [open]);
 
   const handleDateChange = (newValue) => {
     if (newValue === null) {

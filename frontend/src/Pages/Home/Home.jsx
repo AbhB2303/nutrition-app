@@ -5,8 +5,7 @@ import { MealsList } from "../../Components/MealsList/MealsList";
 import { TransitionsModal } from "../../Components/Modal/TransitionsModal";
 import { RecordModal } from "../../Components/Modal/RecordModal";
 import { useAuth0 } from "@auth0/auth0-react";
-import { TestChart } from "../../Components/testChart";
-import { TestChart2 } from "../../Components/TestChart2";
+import { Custom_Chart } from "../../Components/Chart";
 import { Checkbox } from "@mui/material";
 import { Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
@@ -16,10 +15,91 @@ import axios from "axios";
 export const Home = () => {
   const [open, setOpen] = useState(false);
   const [listOfMeals, setListOfMeals] = useState([]);
-  const [mealForGraph2, setMealForGraph2] = useState(null);
-  const [timePeriod, setTimePeriod] = useState("day");
+  const [mealForGraph2, setMealForGraph2] = useState("");
+  const [recordedMeals, setRecordedMeals] = useState([]); // [mealName, mealNutritionInfo]
+  const [timePeriod, setTimePeriod] = useState("week");
   const { user } = useAuth0();
   const [openRecord, setOpenRecord] = useState(false);
+  const [barChartData, setBarchartData] = useState([]);
+  const [lineChartData, setLineChartData] = useState([]);
+  const [loadChartData, setLoadChartData] = useState(false);
+
+  const LineChartOptions = {
+    title: "Nutritional Value Of All Meals Over Time",
+    hAxis: { title: "Date" },
+    vAxis: { title: "Nutritional Value", minValue: 0, maxValue: 300 },
+  };
+
+  const BarChartoptions = {
+    title: "Nutritional Value Of a Meal",
+    vAxis: { title: "Meals" },
+    hAxis: { title: "Quantity (grams)", minValue: 0, maxValue: 1 },
+  };
+
+  const getIngredientNutritionInfo = (mealInfo, chartType, date) => {
+    const ingredients = mealInfo.map((meal) => meal[0]);
+    console.log(ingredients);
+    console.log(mealInfo);
+    const header_array = ["Quantity (grams)"];
+    const data_array = ["Test"];
+    if (chartType === "LineChart" && date) {
+      data_array[0] = date;
+    }
+    for (let i = 0; i < ingredients.length; i++) {
+      const ingredient_data = ingredients[i]["nutrient_info"];
+      console.log(ingredient_data);
+      for (let j = 0; j < ingredient_data.length; j++) {
+        if (
+          ingredient_data[j]["Label"] === "Protein" ||
+          ingredient_data[j]["Label"] === "Total lipid (fat)" ||
+          ingredient_data[j]["Label"] === "Carbohydrate, by difference" ||
+          ingredient_data[j]["Label"] === "Fiber, total dietary" ||
+          ingredient_data[j]["Label"] === "Sugars, total"
+        ) {
+          if (!header_array.includes(ingredient_data[j]["Label"])) {
+            header_array.push(ingredient_data[j]["Label"]);
+            data_array.push(ingredient_data[j]["Total"]);
+          }
+
+          const index_of_val = header_array.indexOf(
+            ingredient_data[j]["Label"]
+          );
+
+          data_array[index_of_val] =
+            data_array[index_of_val] + ingredient_data[j]["Total"];
+        }
+      }
+    }
+
+    const ChartData = [header_array, data_array];
+    if (chartType === "LineChart") {
+      return ChartData;
+    }
+    if (chartType === "BarChart") {
+      setBarchartData(ChartData);
+    }
+  };
+
+  const getNutritionInfo = async (mealName) => {
+    const response = await axios
+      .get(
+        `${process.env.REACT_APP_API_SERVER_URL}/get_meal_nutrients/${user.email}/${mealName}`
+      )
+      .then((res) => {
+        // gets total nutrient info of given meal
+        const mealInfo = res.data;
+        // each value in response contains 2 dictionaries, the first contains the nutrient info for each ingredient of the meal
+        getIngredientNutritionInfo(mealInfo, "BarChart");
+      });
+  };
+
+  const setMealChartData = async (meal) => {
+    const meal_index = listOfMeals.map((meal) => meal._id).indexOf(meal);
+    console.log(meal_index);
+    // sets value retrieved on state
+    await getNutritionInfo(meal);
+    // iterates through ingredients of requested meal and gets the nutrient info
+  };
 
   const openCreateMealModal = () => {
     setOpen(true);
@@ -33,10 +113,45 @@ export const Home = () => {
     axios
       .get(`${process.env.REACT_APP_API_SERVER_URL}/get_meals/${user.email}`)
       .then((res) => {
-        console.log(res.data);
         setListOfMeals(res.data);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_SERVER_URL}/get_recorded_meals/${user.email}`
+      )
+      .then(async (res) => {
+        setRecordedMeals(res.data);
+        console.log(recordedMeals);
+        const TotalChartData = [];
+        for (let i = 0; i < recordedMeals.length; i++) {
+          const response = await axios
+            .get(
+              `${process.env.REACT_APP_API_SERVER_URL}/get_meal_nutrients/${user.email}/${recordedMeals[i]["meal_id"]}`
+            )
+            .then((res) => {
+              // gets total nutrient info of given meal
+              const mealInfo = res.data;
+              console.log(mealInfo);
+              // each value in response contains 2 dictionaries, the first contains the nutrient info for each ingredient of the
+              const ChartData = getIngredientNutritionInfo(
+                mealInfo,
+                "LineChart",
+                recordedMeals[i]["date"]
+              );
+              console.log(ChartData);
+              if (i === 0) {
+                TotalChartData.push(ChartData[0]);
+              }
+              TotalChartData.push(ChartData[1]);
+            });
+        }
+        setLineChartData(TotalChartData);
+        console.log(TotalChartData);
+      });
+  }, [loadChartData]);
 
   return (
     <div className="home-container">
@@ -71,33 +186,28 @@ export const Home = () => {
       </div>
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
-        <div className="graph-container">
-          <div className="graph-1">
-            <TestChart />
-          </div>
-          <div className="graph-1">
-            <TestChart2 />
-          </div>
+        <div className="graph">
+          <Custom_Chart
+            data={lineChartData}
+            graphType={"LineChart"}
+            options={LineChartOptions}
+          />
         </div>
-        <div className="meals-saved-list">
-          {listOfMeals && (
-            <MealsList
-              ListOfMeals={listOfMeals}
-              setListOfMeals={setListOfMeals}
-            />
-          )}
+        <div className="graph" hidden={true}>
+          <Custom_Chart
+            data={barChartData}
+            graphType={"BarChart"}
+            options={BarChartoptions}
+          />
         </div>
       </div>
       <div className="graph-options">
         <div className="graph-options-container">
-          <h3 style={{ textAlign: "left" }}>Graph Options</h3>
           <p>Configure Meals Over Time Graph</p>
           <div>
             <Checkbox /> Show Total Lipid (Fat)
             <Checkbox /> Show Protein
             <Checkbox /> Show Carbs
-            <Checkbox /> Show Fiber
-            <Checkbox /> Show Sugar
             <Select
               style={{ margin: "10px" }}
               value={timePeriod}
@@ -111,28 +221,19 @@ export const Home = () => {
               <MenuItem value={"month"}>Month</MenuItem>
               <MenuItem value={"year"}>Year</MenuItem>
             </Select>
-            <Button>Submit</Button>
+            <Button
+              onClick={() => {
+                setLoadChartData(true);
+              }}
+            >
+              Submit
+            </Button>
           </div>
           <p>Configure Meals Chart</p>
           <div>
             <Checkbox /> Show Total Lipid (Fat)
             <Checkbox /> Show Protein
             <Checkbox /> Show Carbs
-            <Checkbox /> Show Fiber
-            <Checkbox /> Show Sugar
-            <Select
-              style={{ margin: "10px" }}
-              value={timePeriod}
-              label="Time Period"
-              onChange={(e) => {
-                setTimePeriod(e.target.value);
-              }}
-            >
-              <MenuItem value={"day"}>Day</MenuItem>
-              <MenuItem value={"week"}>Week</MenuItem>
-              <MenuItem value={"month"}>Month</MenuItem>
-              <MenuItem value={"year"}>Year</MenuItem>
-            </Select>
             <Select
               style={{ margin: "10px" }}
               label="Meals to Include"
@@ -145,11 +246,17 @@ export const Home = () => {
                   <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
                 ))}
             </Select>
-            <Button>Submit</Button>
+            <Button
+              onClick={() => {
+                setMealChartData(mealForGraph2);
+              }}
+            >
+              Submit
+            </Button>
           </div>
         </div>
-        <div className="graph-options-container-2">
-          <h2>New Recommendations</h2>
+        <div className="recommendations-container">
+          <h3 style={{ textAlign: "left" }}>Current Recommendations</h3>
           <p>
             {" "}
             Looks like your protien intake is low. Try adding more protien to
@@ -160,6 +267,14 @@ export const Home = () => {
             Looks like your fat intake is high. Try adding less fat to your
             meals.
           </p>
+        </div>
+        <div className="meals-saved-list">
+          {listOfMeals && (
+            <MealsList
+              ListOfMeals={listOfMeals}
+              setListOfMeals={setListOfMeals}
+            />
+          )}
         </div>
       </div>
 
