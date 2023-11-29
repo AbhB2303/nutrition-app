@@ -1,6 +1,32 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
+import Button from "@mui/material/Button";
 
-export const MealsList = ({ ListOfMeals }) => {
+export const MealsList = () => {
+  const [ListOfMeals, setListOfMeals] = useState(null);
+  const { user, isAuthenticated } = useAuth0();
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_SERVER_URL}/get_meals/${user.email}`)
+      .then((res) => {
+        console.log(res.data);
+        setListOfMeals(res.data);
+      });
+  }, []);
+
+  const getNutritionInfo = async (mealName) => {
+    const response = await axios
+      .get(
+        `${process.env.REACT_APP_API_SERVER_URL}/get_meal_nutrients/${user.email}/${mealName}`
+      )
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
+
   return (
     <div>
       <h1
@@ -13,9 +39,15 @@ export const MealsList = ({ ListOfMeals }) => {
       </h1>
       {ListOfMeals ? (
         ListOfMeals.map((meal) => (
-          <li style={{ border: "1px solid black", margin: "10px" }}>
-            <p>Meal Name: {meal.MealName}</p>
-            <p>Meal Ingrediants: </p>
+          <Button
+            style={{ fontWeight: "bold", margin: "20px" }}
+            onClick={() => {
+              getNutritionInfo(meal._id);
+            }}
+          >
+            {meal.MealName}
+          </Button>
+          /* <p>Meal Ingrediants: </p>
             <table
               style={{
                 width: "50%",
@@ -31,17 +63,16 @@ export const MealsList = ({ ListOfMeals }) => {
                 <th>Serving Size</th>
                 <th>Unit</th>
               </tr>
-              {meal.MealIngrediants.map((ingrediant) => (
+              {meal.MealIngredients.map((ingredient) => (
                 <tr>
-                  <td>{ingrediant.category}</td>
-                  <td>{ingrediant.food}</td>
-                  <td>{ingrediant.foodType}</td>
-                  <td>{ingrediant.servingSize}</td>
-                  <td>{ingrediant.unit}</td>
+                  <td>{ingredient.category}</td>
+                  <td>{ingredient.food}</td>
+                  <td>{ingredient.foodType}</td>
+                  <td>{ingredient.servingSize}</td>
+                  <td>{ingredient.unit}</td>
                 </tr>
               ))}
-            </table>
-          </li>
+            </table> */
         ))
       ) : (
         <p style={{ margin: "20px" }}>

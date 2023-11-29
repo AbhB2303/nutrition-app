@@ -105,11 +105,14 @@ export const TransitionsModal = ({ open, setOpen }) => {
             </div>
             {/* Create manually component */}
             {createType === 0 && (
-              <ManualCreateComponent setCreateType={setCreateType} />
+              <ManualCreateComponent
+                setCreateType={setCreateType}
+                setOpen={setOpen}
+              />
             )}
             {/* Barcode scanner component */}
             {cameraOn && createType === 1 && (
-              <BarcodeScanner setCreateType={setCreateType} />
+              <BarcodeScanner setCreateType={setCreateType} setOpen={setOpen} />
             )}
 
             {createType !== null && (

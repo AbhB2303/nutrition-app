@@ -1,12 +1,19 @@
-import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import * as React from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-export default function SelectSmall({ unit, setUnit }) {
+export default function SelectSmall({ unit, setUnit, options, setUnitName }) {
   const handleChange = (event) => {
     setUnit(event.target.value);
+    console.log("event.target.value", event.target.value);
+    // set unit name to the label of the selected option
+    setUnitName(
+      options.find((option) => option._id["Gm_Wgt"] === event.target.value)._id[
+        "Msre_Desc"
+      ]
+    );
   };
 
   return (
@@ -22,9 +29,14 @@ export default function SelectSmall({ unit, setUnit }) {
         <MenuItem value="">
           <em>None</em>
         </MenuItem>
-        <MenuItem value={"Cups"}>Cups</MenuItem>
-        <MenuItem value={"Ounces"}>Ounces</MenuItem>
-        <MenuItem value={"Grams"}>Grams</MenuItem>
+        {options.map((option) => (
+          <MenuItem
+            value={option._id["Gm_Wgt"]}
+            label={option._id["Msre_Desc"]}
+          >
+            {option._id["Msre_Desc"]}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );

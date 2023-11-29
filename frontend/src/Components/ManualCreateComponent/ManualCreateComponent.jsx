@@ -5,15 +5,16 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import SelectSmall from "../units_dropdown";
 import Typography from "@mui/material/Typography";
+import { useAuth0 } from "@auth0/auth0-react";
 
-export const ManualCreateComponent = () => {
+export const ManualCreateComponent = ({ setOpen }) => {
   const REACT_API_SERVER_URL = process.env.REACT_APP_API_SERVER_URL;
 
   // 25 broad categories to initially choose from
   const [foodCategories, setFoodCategories] = useState(null);
-
   const [foodsInCategory, setFoodsInCategory] = useState(null);
   const [FoodTypes, setFoodTypes] = useState(null);
+  const [ServingSizes, setServingSizes] = useState(null);
 
   // Values picked in submission
   const [ChosenCategory, setChosenCategory] = useState(null);
@@ -24,16 +25,40 @@ export const ManualCreateComponent = () => {
   const [MealIngredients, setMealIngredients] = useState([]);
   const [ServingSize, setServingSize] = useState(null);
   const [Unit, setUnit] = useState("");
+  const [UnitName, setUnitName] = useState(null);
   const [NameIsSet, setNameIsSet] = useState(false);
 
   // states of input
   const [InputFormCompleted, setInputFormCompleted] = useState(false);
   const [IngrediantAdded, setIngrediantAdded] = useState(false);
 
+  const { user, isAuthenticated } = useAuth0();
+
   const createMealRecord = async (meal) => {
-    // const response = await axios.post(`${REACT_API_SERVER_URL}/meals`, meal);
-    // console.log(response);
-    console.log(meal);
+    if (!meal) return;
+    const formData = new FormData();
+    formData.append("MealName", meal.MealName);
+    const mealIngredients = [];
+    for (const ingredient of meal.MealIngredients) {
+      mealIngredients.push({
+        category: ingredient.category,
+        Long_Desc: ingredient.food + "," + ingredient.foodType,
+        serving_size: ingredient.servingSize,
+        weight_in_grams: ingredient.unit,
+        unit_name: ingredient.unitName,
+      });
+    }
+    console.log(mealIngredients);
+    formData.append("MealIngredients", JSON.stringify(mealIngredients));
+    if (isAuthenticated) {
+      const response = await axios.post(
+        `${REACT_API_SERVER_URL}/save_meal/${user.email}`,
+        formData
+      );
+      console.log(response);
+      setOpen(false);
+      window.location.reload();
+    }
   };
 
   const getFoodsInCategory = async (category, id) => {
@@ -49,7 +74,26 @@ export const ManualCreateComponent = () => {
     setFoodCategories(response.data);
   };
 
-  const AddToMeal = async (category, food, foodType, servingSize, unit) => {
+  const get_serving_size = async (food, foodType) => {
+    const foodname = food + "," + foodType;
+    const formData = new FormData();
+    formData.append("item_name", foodname);
+    const response = await axios
+      .post(`${REACT_API_SERVER_URL}/serving_size/`, formData)
+      .then((res) => {
+        console.log(res.data);
+        setServingSizes(res.data);
+      });
+  };
+
+  const AddToMeal = async (
+    category,
+    food,
+    foodType,
+    servingSize,
+    unit,
+    unitName
+  ) => {
     setMealIngredients([
       ...MealIngredients,
       {
@@ -58,6 +102,7 @@ export const ManualCreateComponent = () => {
         foodType: foodType,
         servingSize: servingSize,
         unit: unit,
+        unitName: unitName,
       },
     ]);
   };
@@ -66,6 +111,12 @@ export const ManualCreateComponent = () => {
   useEffect(() => {
     get_food_categories();
   }, []);
+
+  useEffect(() => {
+    if (ChosenFoodType !== null) {
+      get_serving_size(ChosenFood, ChosenFoodType);
+    }
+  }, [ChosenFoodType]);
 
   const ResetMeal = (ResetEntireMeal = true) => {
     setIngrediantAdded(false);
@@ -77,6 +128,8 @@ export const ManualCreateComponent = () => {
     setChosenFood(null);
     setChosenCategory(null);
     setInputFormCompleted(false);
+    setUnitName(null);
+
     if (ResetEntireMeal) {
       setMealIngredients([]);
       setNameIsSet(false);
@@ -188,21 +241,28 @@ export const ManualCreateComponent = () => {
             <div>
               <TextField
                 id="outlined-basic"
-                label="Amount"
+                label="Serving Size"
+                type="number"
                 onChange={(e) => setServingSize(e.target.value)}
               />
-              <div>
-                <SelectSmall unit={Unit} setUnit={setUnit} />
-              </div>
+              {ServingSizes && ServingSizes.length > 0 && (
+                <SelectSmall
+                  setUnit={setUnit}
+                  options={ServingSizes}
+                  setUnitName={setUnitName}
+                />
+              )}
             </div>
             <Button
               onClick={() => {
+                console.log(UnitName);
                 AddToMeal(
                   ChosenCategory,
                   ChosenFood,
                   ChosenFoodType,
                   ServingSize,
-                  Unit
+                  Unit,
+                  UnitName
                 );
                 setIngrediantAdded(true);
               }}
@@ -221,16 +281,15 @@ export const ManualCreateComponent = () => {
                 <th>Food</th>
                 <th>Food Type</th>
                 <th>Serving Size</th>
-                <th>Unit</th>
-                <th>Remove</th>
+                <th>Units</th>
               </tr>
               {MealIngredients.map((meal) => (
-                <tr>
+                <tr style={{ textAlign: "center" }}>
                   <td>{meal.category}</td>
                   <td>{meal.food}</td>
                   <td>{meal.foodType}</td>
                   <td>{meal.servingSize}</td>
-                  <td>{meal.unit}</td>
+                  <td>{meal.unitName}</td>
                   <td>
                     <Button
                       onClick={() => {

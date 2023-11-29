@@ -1,14 +1,11 @@
 
 .home-container {
-    flex-direction: row;
-    justify-content: space-between;
     display: flex;
+    flex-direction: column;
 }
 
 .side-bar {
     background-color: whitesmoke;
-    display: flex;
-    flex-direction: column;
     width: 15%;
     height: 85vh;
     text-align: center;
@@ -32,13 +29,8 @@
     justify-content: center;
     align-items: center;
     border: 0.01rem rgb(214, 214, 214) solid;
-    width: 99%;
     height: 10vh;
-}
-
-.home-options {
-    display: flex;
-    justify-content: right;
+    cursor: pointer;
 }
 
 .home-title {
@@ -65,7 +57,7 @@
     flex-direction: row;
     justify-content: space-between;
     border: 2px solid #ccc;
-    width: 30%;
+    width: 20%;
     height: 30vh;
     box-shadow: 0 2px 3px #ccc;
 }
