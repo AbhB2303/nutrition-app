@@ -171,3 +171,14 @@ class MongoDB:
             NUTRITION_DB.RecordedMeals.insert_one(meal)
         except DuplicateKeyError:
             return DuplicateKeyError
+
+    def get_recorded_meals(self, email):
+        NUTRITION_DB = self.client.NutritionDB
+        try:
+            meals = NUTRITION_DB.RecordedMeals.find({"email": email})
+            meals = list(meals)
+            for meal in meals:
+                meal["_id"] = str(meal["_id"])
+            return jsonify(meals)
+        except DuplicateKeyError:
+            return DuplicateKeyError

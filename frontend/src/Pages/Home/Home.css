@@ -12,14 +12,34 @@
     font-size: calc(3px + 2vmin);
 }
 
-.placeholder {
+.graph-options {
+    display: flex;
+    flex-direction: row;
+}
+
+.graph-options-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     border: 0.01rem rgb(214, 214, 214) solid;
-    width: 99%;
-    height: 30vh;
+    margin: 1rem;
+    padding: 1rem;
+    width: 60%;
+    height: 38vh;
+    box-shadow: 0 2px 3px #ccc;
+}
+
+.graph-options-container-2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: right;
+    border: 0.01rem rgb(214, 214, 214) solid;
+    margin: 1rem;
+    padding: 1rem;
+    width: 35%;
+    height: 38vh;
     box-shadow: 0 2px 3px #ccc;
 }
 
@@ -52,13 +72,12 @@
 }
 
 .meals-saved-list {
-    margin: 1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border: 2px solid #ccc;
-    width: 20%;
-    height: 30vh;
+    margin: 1rem;
+    width: 15%;
     box-shadow: 0 2px 3px #ccc;
 }
 
@@ -76,6 +95,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    width: 98%;
     height: 40vh;
 }

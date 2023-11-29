@@ -118,7 +118,15 @@ def create_app():
 
     @app.route('/record_meal', methods=['POST'])
     def record_meal():
-        meal = RecordedMeal(**request.form)
+        date = datetime.datetime.strptime(
+            request.form["date"], '%a, %d %b %Y %H:%M:%S %Z')
+        print(date)
+        print(request.form["time"])
+        time = datetime.datetime.strptime(
+            request.form["time"], '%a, %d %b %Y %H:%M:%S %Z')
+
+        meal = RecordedMeal(
+            date=date, time=time, email=request.form["email"], meal_id=request.form["meal_id"])
         print(meal)
         try:
             meal = app.mongo.record_meal(meal.to_dict())
@@ -126,6 +134,15 @@ def create_app():
             print(e)
             return jsonify({"message": "Error saving meal"}), 500
         return {"message": "Meal saved successfully"}
+
+    @app.route('/get_recorded_meals/<email>', methods=['GET'])
+    def get_recorded_meals(email):
+        try:
+            meals = app.mongo.get_recorded_meals(email)
+            return meals
+        except Exception as e:
+            print(e)
+            return jsonify({"message": "Error getting meals"}), 500
 
     return app
 

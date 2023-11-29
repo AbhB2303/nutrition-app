@@ -59,32 +59,27 @@ export const RecordModal = ({ open, setOpen }) => {
       return;
     }
     setSelectedDate(newValue);
-    console.log(newValue);
   };
 
   const handleTimeChange = (newValue) => {
-    if (newValue === null) {
-      return;
-    } else if (newValue > new Date()) {
-      return;
-    }
     setValue(newValue);
-    console.log(newValue);
   };
 
   const onSubmit = () => {
-    console.log(selectedDate);
-    console.log(value);
     let formData = new FormData();
     formData.append("email", user.email);
     formData.append("meal_id", mealType);
     formData.append("date", selectedDate);
     formData.append("time", value);
-    console.log(formData);
-
-    axios.post(`${process.env.REACT_APP_API_SERVER_URL}/record_meal`, {
+    axios.post(
+      `${process.env.REACT_APP_API_SERVER_URL}/record_meal`,
       formData,
-    });
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     handleClose();
   };
 

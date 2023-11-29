@@ -4,18 +4,8 @@ import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import Button from "@mui/material/Button";
 
-export const MealsList = () => {
-  const [ListOfMeals, setListOfMeals] = useState(null);
+export const MealsList = ({ ListOfMeals }) => {
   const { user, isAuthenticated } = useAuth0();
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_SERVER_URL}/get_meals/${user.email}`)
-      .then((res) => {
-        console.log(res.data);
-        setListOfMeals(res.data);
-      });
-  }, []);
 
   const getNutritionInfo = async (mealName) => {
     const response = await axios
@@ -28,19 +18,19 @@ export const MealsList = () => {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: "center", margin: "auto" }}>
       <h1
         style={{
           textAlign: "center",
           fontSize: "20px",
         }}
       >
-        Meals List
+        Recent Meals
       </h1>
       {ListOfMeals ? (
         ListOfMeals.map((meal) => (
           <Button
-            style={{ fontWeight: "bold", margin: "20px" }}
+            style={{ fontWeight: "bold", margin: "10px" }}
             onClick={() => {
               getNutritionInfo(meal._id);
             }}
@@ -75,7 +65,7 @@ export const MealsList = () => {
             </table> */
         ))
       ) : (
-        <p style={{ margin: "20px" }}>
+        <p style={{ marginLeft: "20px" }}>
           You don't have any saved meals yet. Click on the "Create a new meal"
           button to get started!
         </p>

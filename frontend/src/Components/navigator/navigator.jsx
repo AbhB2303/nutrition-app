@@ -10,40 +10,32 @@ export const Navigator = () => {
 
   return (
     <div className="navbar">
-      <header>
-        <p>Nutrition App</p>
+      <header className="navbar-header">
+        <p style={{ margin: "0.5rem" }}>Nutrition App</p>
+
         {isAuthenticated ? (
-          <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              color: "white",
+            }}
+          >
+            <Button color="inherit" onClick={() => navigate("/home")}>
+              Home
+            </Button>
+            <Button color="inherit" onClick={() => navigate("/profile")}>
+              Profile
+            </Button>
             <Button
-              variant="contained"
-              color="primary"
+              color="inherit"
               onClick={() => logout({ returnTo: window.location.origin })}
             >
               Logout
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate("/profile")}
-            >
-              Profile
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate("/home")}
-            >
-              Home
-            </Button>
           </div>
         ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </Button>
+          <Button onClick={() => navigate("/login")}>Login</Button>
         )}
       </header>
     </div>

@@ -31,7 +31,7 @@ function App() {
         </Routes>
       </div>
       <div>
-        <footer>Footer</footer>
+        <footer className="footer">Footer</footer>
       </div>
     </div>
   );
