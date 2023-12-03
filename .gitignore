@@ -5,3 +5,5 @@ frontend/node_modules
 frontend/.env
 backend/.env
 backend/DocModels/__pycache__/recordedMeal.cpython-312.pyc
+backend/DocModels/__pycache__/meal.cpython-312.pyc
+backend/DocModels/__pycache__/user.cpython-312.pyc
