@@ -82,7 +82,7 @@ def create_app():
     def get_meals(email):
         try:
             meals = app.mongo.get_meals(email)
-            return meals
+            return jsonify(meals)
         except Exception as e:
             print(e)
             return jsonify({"message": "Error getting meals"}), 500
@@ -96,6 +96,29 @@ def create_app():
             nutrients_data.append(app.mongo.get_nutrients(
                 ndb_no, ingredient["weight_in_grams"], ingredient["serving_size"], serving_size_unit=ingredient["unit_name"]))
         return jsonify(nutrients_data)
+
+    @app.route('/get_all_meal_with_nutrients/<email>', methods=['GET'])
+    def get_all_meal_with_nutrients(email):
+        meals = app.mongo.get_meals(email)
+        meals_data = []
+        for meal in meals:
+            all_nutrient_total = {}
+            for ingredient in meal["MealIngredients"]:
+                ndb_no = app.mongo.get_ingredient_number(
+                    ingredient["Long_Desc"])
+                nutrients = app.mongo.get_nutrients(
+                    ndb_no, ingredient["weight_in_grams"], ingredient["serving_size"], serving_size_unit=ingredient["unit_name"])
+                # add nutrients in loop
+                nutrients = nutrients[0]["nutrient_info"]
+                for nutrient in nutrients:
+                    if nutrient["Label"] in all_nutrient_total:
+                        all_nutrient_total[nutrient
+                                           ["Label"]] += nutrient["Total"]
+                    else:
+                        all_nutrient_total[nutrient
+                                           ["Label"]] = nutrient["Total"]
+            meals_data.append({"meal": meal, "nutrients": all_nutrient_total})
+        return jsonify(meals_data)
 
     @app.route('/create_user', methods=['POST'])
     def create_user():
@@ -120,8 +143,6 @@ def create_app():
     def record_meal():
         date = datetime.datetime.strptime(
             request.form["date"], '%a, %d %b %Y %H:%M:%S %Z')
-        print(date)
-        print(request.form["time"])
         time = datetime.datetime.strptime(
             request.form["time"], '%a, %d %b %Y %H:%M:%S %Z')
 

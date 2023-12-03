@@ -49,7 +49,7 @@ class MongoDB:
             meals = list(meals)
             for meal in meals:
                 meal["_id"] = str(meal["_id"])
-            return jsonify(meals)
+            return list(meals)
         except DuplicateKeyError:
             return DuplicateKeyError
 
@@ -147,10 +147,25 @@ class MongoDB:
 
     def save_user(self, user):
         NUTRITION_DB = self.client.NutritionDB
+        print(user)
         try:
-            NUTRITION_DB.Users.insert_one(user)
-        except DuplicateKeyError:
-            return DuplicateKeyError
+            update = NUTRITION_DB.Users.find_one({"email": user["email"]})
+            if update is not None:
+                NUTRITION_DB.Users.update_one(
+                    {"email": user["email"]},
+                    {"$set": {
+                        "username": user["username"],
+                        "age": user["age"],
+                        "location": user["location"],
+                        "weight": user["weight"],
+                        "height": user["height"],
+                        "goals": user["goals"],
+                    }}
+                )
+            else:
+                NUTRITION_DB.Users.insert_one(user)
+        except Exception as e:
+            print(e)
         return jsonify({"message": "User saved successfully"})
 
     def get_user_from_email(self, email):
@@ -162,8 +177,9 @@ class MongoDB:
                 user.pop("_id")
                 user = UserModel(**user)
                 return user.to_dict()
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "user not found from email"})
 
     def record_meal(self, meal):
         NUTRITION_DB = self.client.NutritionDB
@@ -179,6 +195,14 @@ class MongoDB:
             meals = list(meals)
             for meal in meals:
                 meal["_id"] = str(meal["_id"])
+                # remove time from date
+                meal["date"] = meal["date"].strftime("%a, %d %b %Y")
+                # remove date from time
+                meal["time"] = meal["time"].strftime("%H:%M:%S")
+                # combine and format date and time
+                meal["date"] = datetime.datetime.strptime(
+                    meal["date"] + " " + meal["time"], '%a, %d %b %Y %H:%M:%S')
+
             return jsonify(meals)
         except DuplicateKeyError:
             return DuplicateKeyError

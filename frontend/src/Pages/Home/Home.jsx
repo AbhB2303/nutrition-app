@@ -11,30 +11,37 @@ import { Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect } from "react";
 import axios from "axios";
-import Box from '@mui/system/Box';
 
 export const Home = () => {
   const [open, setOpen] = useState(false);
-  const [listOfMeals, setListOfMeals] = useState([]);
+  const [listOfMeals, setListOfMeals] = useState(null);
   const [mealForGraph2, setMealForGraph2] = useState("");
   const [recordedMeals, setRecordedMeals] = useState([]); // [mealName, mealNutritionInfo]
-  const [timePeriod, setTimePeriod] = useState("week");
+  const [timePeriod, setTimePeriod] = useState("day");
   const { user } = useAuth0();
   const [openRecord, setOpenRecord] = useState(false);
-  const [barChartData, setBarchartData] = useState([]);
-  const [lineChartData, setLineChartData] = useState([]);
+  const [tableData, setTableData] = useState(null);
+  const [barChartData, setBarchartData] = useState([
+    ["Quantity (grams)", "Protein", "Fat", "Carbs"],
+    ["Test", 0, 0, 0],
+  ]);
+  const [lineChartData, setLineChartData] = useState([
+    ["Date", "Protein", "Fat", "Carbs"],
+    // [full date and time in dayjs format, protein, fat, carbs]
+    [0, 30, 40, 50],
+  ]);
   const [loadChartData, setLoadChartData] = useState(false);
 
   const LineChartOptions = {
     title: "Nutritional Value Of All Meals Over Time",
     hAxis: { title: "Date" },
-    vAxis: { title: "Nutritional Value", minValue: 0, maxValue: 300 },
+    vAxis: { title: "Nutritional Value" },
   };
 
   const BarChartoptions = {
     title: "Nutritional Value Of a Meal",
     vAxis: { title: "Meals" },
-    hAxis: { title: "Quantity (grams)", minValue: 0, maxValue: 1 },
+    hAxis: { title: "Quantity (grams)" },
   };
 
   const getIngredientNutritionInfo = (mealInfo, chartType, date) => {
@@ -121,6 +128,18 @@ export const Home = () => {
   useEffect(() => {
     axios
       .get(
+        `${process.env.REACT_APP_API_SERVER_URL}/get_all_meal_with_nutrients/${user.email}`
+      )
+      .then((res) => {
+        const table = res.data;
+        setTableData(table);
+        console.log(table);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(
         `${process.env.REACT_APP_API_SERVER_URL}/get_recorded_meals/${user.email}`
       )
       .then(async (res) => {
@@ -184,16 +203,35 @@ export const Home = () => {
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
         <div className="graph">
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <div>
-              <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Overall nutritional value over time</h3>
-              <p style={{margin: "0", fontSize: "12px"}}>For the past {timePeriod}</p>
+              <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
+                Overall nutritional value over time
+              </h3>
+              <p style={{ margin: "0", fontSize: "12px" }}>
+                For the past {timePeriod}
+              </p>
             </div>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                backgroundColor: "white",
+              }}
+            >
               <Select
-                style={{ margin: "10px" }}
+                style={{ margin: "10px", width: "100px" }}
                 value={timePeriod}
+                placeholder="Time Period"
                 label="Time Period"
+                variant="outlined"
                 onChange={(e) => {
                   setTimePeriod(e.target.value);
                 }}
@@ -205,7 +243,7 @@ export const Home = () => {
               </Select>
               <Button
                 onClick={() => {
-                  setLoadChartData(true);
+                  setLoadChartData(!loadChartData);
                 }}
               >
                 Submit
@@ -219,14 +257,31 @@ export const Home = () => {
           />
         </div>
         <div className="graph">
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <div>
-              <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Nutritional value</h3>
-              <p style={{margin: "0", fontSize: "12px"}}>Of a recently consumed item</p>
+              <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
+                Nutritional value
+              </h3>
+              <p style={{ margin: "0", fontSize: "12px" }}>
+                Of a recently consumed item
+              </p>
             </div>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                backgroundColor: "white",
+              }}
+            >
               <Select
-                style={{ margin: "10px" }}
+                style={{ margin: "10px", width: "100px" }}
                 label="Meals to Include"
                 onChange={(e) => {
                   setMealForGraph2(e.target.value);
@@ -276,6 +331,54 @@ export const Home = () => {
           )}
         </div>
       </div>
+
+      {tableData && (
+        <table className="table">
+          <thead>
+            <tr
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                fontWeight: "bold",
+              }}
+            >
+              <th>Meal Name</th>
+              <th>Protein</th>
+              <th>Iron</th>
+              <th>Energy</th>
+              <th>Carbs</th>
+            </tr>
+          </thead>
+          <tbody
+            style={{
+              overflowY: "scroll",
+              height: "200px",
+              border: "1px solid black",
+              textAlign: "center",
+            }}
+            className="table-body"
+          >
+            {" "}
+            {tableData.map((meal) => {
+              return (
+                <tr
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <td>{meal.meal.MealName}</td>
+                  <td>{meal.nutrients.Protein}</td>
+                  <td>{meal.nutrients["Iron, Fe"]}</td>
+                  <td>{meal.nutrients.Energy}</td>
+                  <td>{meal.nutrients["Vitamin D"]}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
 
       <TransitionsModal open={open} setOpen={setOpen} />
       <RecordModal open={openRecord} setOpen={setOpenRecord} />

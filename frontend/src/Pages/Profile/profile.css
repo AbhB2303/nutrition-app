@@ -1,0 +1,11 @@
+.label {
+        margin-Top: 8px;
+        align-Self: left;
+        font-Size: 20px;
+        text-Align: left;
+}
+
+.form-container {
+    display: "flex";
+    flex-Direction: "row";
+}

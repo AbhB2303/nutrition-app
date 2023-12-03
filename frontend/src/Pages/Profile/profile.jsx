@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Label from "@mui/material/FormLabel";
+import { TextareaAutosize } from "@mui/material";
+import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
 
 const Profile = () => {
   const [formData, setFormData] = useState({});
@@ -26,7 +28,21 @@ const Profile = () => {
   }, [isAuthenticated]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // regex to only allow number inputs
+    if (
+      e.target.name === "age" ||
+      e.target.name === "height" ||
+      e.target.name === "weight"
+    ) {
+      if (e.target.value < 0) {
+        e.target.value = 0;
+      }
+
+      const numeric = e.target.value.replace(/[^0-9]/g, "");
+      setFormData({ ...formData, [e.target.name]: numeric });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -38,6 +54,7 @@ const Profile = () => {
     newformData.append("location", formData.location);
     newformData.append("weight", formData.weight);
     newformData.append("height", formData.height);
+    newformData.append("goals", formData.goals);
 
     console.log("Form data submitted:", newformData);
     axios.post(
@@ -50,134 +67,123 @@ const Profile = () => {
     <div>
       <h1>User Profile</h1>
       <p>Welcome to your profile page!</p>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          margin: "10px",
-        }}
-      >
-        {/* fields: username, email, age, location, weight, height */}
-        <Label
+      <div className="form-container">
+        <div
           style={{
-            marginTop: "8px",
-            alignSelf: "left",
-            fontSize: "20px",
-            textAlign: "left",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            margin: "10px",
           }}
-          htmlFor="Username"
         >
-          Username
-        </Label>
-        <TextField
-          id="Username"
-          name="username"
-          onChange={handleChange}
-          value={formData.username}
-          hiddenLabel={!formData.username}
-          required
-        />
-        <Label
+          {/* fields: username, email, age, location, weight, height */}
+          <Label classname="label" htmlFor="Username">
+            Username
+          </Label>
+          <TextField
+            id="Username"
+            name="username"
+            onChange={handleChange}
+            value={formData.username}
+            hiddenLabel={!formData.username}
+            required
+          />
+          <Label classname="label" htmlFor="Email">
+            Email
+          </Label>
+          <TextField
+            id="Email"
+            name="email"
+            onChange={handleChange}
+            value={formData.email}
+            required
+          />
+          <Label classname="label" htmlFor="Age">
+            Age
+          </Label>
+          <TextField
+            id="Age"
+            name="age"
+            onChange={handleChange}
+            value={formData.age}
+            required
+            type={Number}
+          />
+        </div>
+        <div
           style={{
-            marginTop: "8px",
-            alignSelf: "left",
-            fontSize: "20px",
-            textAlign: "left",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            margin: "10px",
           }}
-          htmlFor="Email"
         >
-          Email
-        </Label>
-        <TextField
-          id="Email"
-          name="email"
-          onChange={handleChange}
-          value={formData.email}
-          required
-        />
-        <Label
+          <Label classname="label" htmlFor="Location">
+            Location
+          </Label>
+          <TextField
+            id="Location"
+            name="location"
+            onChange={handleChange}
+            value={formData.location}
+            required
+          />
+          <Label classname="label" htmlFor="Weight">
+            Weight
+          </Label>
+          <TextField
+            id="Weight"
+            name="weight"
+            onChange={handleChange}
+            value={formData.weight}
+            required
+          />
+          <Label classname="label" htmlFor="Height">
+            Height
+          </Label>
+          <TextField
+            id="Height"
+            name="height"
+            onChange={handleChange}
+            value={formData.height}
+            required
+            InputProps={{
+              inputProps: {
+                pattern: "[0-9]*", // Restrict input to numeric values
+              },
+            }}
+          />
+        </div>
+        <div
           style={{
-            marginTop: "8px",
-            alignSelf: "left",
-            fontSize: "20px",
-            textAlign: "left",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            margin: "10px",
           }}
-          htmlFor="Age"
         >
-          Age
-        </Label>
-        <TextField
-          id="Age"
-          name="age"
-          onChange={handleChange}
-          value={formData.age}
-          required
-        />
-        <Label
-          style={{
-            marginTop: "8px",
-            alignSelf: "left",
-            fontSize: "20px",
-            textAlign: "left",
-          }}
-          htmlFor="Location"
-        >
-          Location
-        </Label>
-        <TextField
-          id="Location"
-          name="location"
-          onChange={handleChange}
-          value={formData.location}
-          required
-        />
-        <Label
-          style={{
-            marginTop: "8px",
-            alignSelf: "left",
-            fontSize: "20px",
-            textAlign: "left",
-          }}
-          htmlFor="Weight"
-        >
-          Weight
-        </Label>
-        <TextField
-          id="Weight"
-          name="weight"
-          onChange={handleChange}
-          value={formData.weight}
-          required
-        />
-        <Label
-          style={{
-            marginTop: "8px",
-            alignSelf: "left",
-            fontSize: "20px",
-            textAlign: "left",
-          }}
-          htmlFor="Height"
-        >
-          Height
-        </Label>
-        <TextField
-          id="Height"
-          name="height"
-          onChange={handleChange}
-          value={formData.height}
-          required
-        />
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ marginTop: "8px" }}
-          onClick={handleSubmit}
-        >
-          Save Profile
-        </Button>
+          <Label classname="label" htmlFor="Goals">
+            Nutritional Goals:
+          </Label>
+          <TextareaAutosize
+            id="goals"
+            name="goals"
+            onChange={handleChange}
+            value={formData.goals}
+            style={{ height: "200px" }}
+          />
+        </div>
+        <div>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ marginTop: "8px" }}
+            onClick={handleSubmit}
+          >
+            Save Profile
+          </Button>
+        </div>
       </div>
     </div>
   );

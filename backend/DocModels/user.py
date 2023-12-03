@@ -13,6 +13,7 @@ class UserModel(BaseModel):
     height: int = Field(alias="height", default="")
     id: str = Field(alias="_id", default="")
     meals: list = Field(alias="meals", default=[])
+    goals: str = Field(alias="goals", default="")
 
     def to_dict(self):
         return {
@@ -23,6 +24,7 @@ class UserModel(BaseModel):
             "weight": self.weight,
             "height": self.height,
             "meals": self.meals,
+            "goals": self.goals,
         }
 
     def __str__(self):
