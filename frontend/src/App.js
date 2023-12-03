@@ -15,7 +15,7 @@ function App() {
       <div>
         <Navigator />
       </div>
-      <div>
+      <div className="container">
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route

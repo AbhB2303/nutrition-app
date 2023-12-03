@@ -6,16 +6,16 @@
   text-align: center;
   font-size: calc(10px + 2vmin);
   margin: "10px";
-      background-color: #282c34;
-    color: white;
+      background-color: #ffffff;
+  color: #00382e;
 }
 
 .navbar-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: calc(5px + 2vmin);
+  color: #00382e;
   margin: "10px";
   padding: "20px";
 }

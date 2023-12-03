@@ -26,7 +26,7 @@ const style = {
   width: "80%",
   maxHeight: "70%",
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  borderRadius: "15px",
   boxShadow: 24,
   p: 4,
   overflow: "scroll",
@@ -83,7 +83,7 @@ export const RecordModal = ({ open, setOpen }) => {
   };
 
   return (
-    <div style={{ margin: "10px" }}>
+    <div>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -99,25 +99,31 @@ export const RecordModal = ({ open, setOpen }) => {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Button
-              className="closeButton"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              X
-            </Button>
-            <div className="modal-header">
-              <h2 className="modal-title">Record a new meal</h2>
-              <h3 className="modal-subtitle">Enter the meal details below</h3>
+            <div>
+              <div>
+                <h2 className="modal-title">Record a new meal</h2>
+                <p className="modal-subtitle">Enter the meal details below.</p>
+              </div>
+              <Button
+                style={{position: "absolute", margin: "20px 10px"}}
+                className="closeButton"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                X
+              </Button>
+            </div>
+            <div style={{display: "block", textAlign: "center"}}>
               <div
                 style={{
                   textAlign: "center",
                   justifyContent: "center",
                   alignItems: "center",
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   gap: "10px",
+                  marginBottom: "25px"
                 }}
               >
                 <Select
@@ -132,7 +138,7 @@ export const RecordModal = ({ open, setOpen }) => {
                       <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
                     ))}
                 </Select>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider style={{display: "inline-block"}} dateAdapter={AdapterDayjs}>
                   <DatePicker
                     onChange={(newValue) => {
                       handleDateChange(newValue);
@@ -146,14 +152,15 @@ export const RecordModal = ({ open, setOpen }) => {
                     renderInput={(params) => <TextField {...params} />}
                   />
                 </LocalizationProvider>
-                <Button
+              </div>
+              <Button
+                variant="contained"
                   onClick={() => {
                     onSubmit();
                   }}
                 >
                   Submit
                 </Button>
-              </div>
             </div>
           </Box>
         </Fade>
