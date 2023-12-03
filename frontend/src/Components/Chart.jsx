@@ -13,7 +13,7 @@ export const Custom_Chart = ({ data, graphType, options }) => {
           width={"45vw"}
         />
       </div>
-      <div
+      {/* <div
         hidden={data.length !== 0}
         style={{
           textAlign: "center",
@@ -31,7 +31,7 @@ export const Custom_Chart = ({ data, graphType, options }) => {
           Don't have any meals added yet? Add one at the top right by clicking
           'Create A New Meal'.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

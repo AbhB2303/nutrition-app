@@ -11,6 +11,7 @@ import { Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect } from "react";
 import axios from "axios";
+import Box from '@mui/system/Box';
 
 export const Home = () => {
   const [open, setOpen] = useState(false);
@@ -155,16 +156,11 @@ export const Home = () => {
 
   return (
     <div className="home-container">
-      {/* <div className="side-bar">
-        <div className="side-bar-item">Home</div>
-        <div className="side-bar-item">Meals</div>
-        <div className="side-bar-item">Settings</div>
-      </div> */}
-
       <div className="home-header">
-        <h1 className="home-title">Welcome to Meal Tracker</h1>
+        <h1 className="home-title">Nutrition Dashboard</h1>
         <div className="home-options">
           <Button
+            variant="contained"
             key="Record a new meal"
             style={{ margin: "10px" }}
             onClick={() => {
@@ -174,6 +170,7 @@ export const Home = () => {
             Record a new meal
           </Button>
           <Button
+            variant="contained"
             key="Create a new meal"
             style={{ margin: "10px" }}
             onClick={() => {
@@ -187,13 +184,68 @@ export const Home = () => {
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
         <div className="graph">
+          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            <div>
+              <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Overall nutritional value over time</h3>
+              <p style={{margin: "0", fontSize: "12px"}}>For the past {timePeriod}</p>
+            </div>
+            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
+              <Select
+                style={{ margin: "10px" }}
+                value={timePeriod}
+                label="Time Period"
+                onChange={(e) => {
+                  setTimePeriod(e.target.value);
+                }}
+              >
+                <MenuItem value={"day"}>Day</MenuItem>
+                <MenuItem value={"week"}>Week</MenuItem>
+                <MenuItem value={"month"}>Month</MenuItem>
+                <MenuItem value={"year"}>Year</MenuItem>
+              </Select>
+              <Button
+                onClick={() => {
+                  setLoadChartData(true);
+                }}
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
           <Custom_Chart
             data={lineChartData}
             graphType={"LineChart"}
             options={LineChartOptions}
           />
         </div>
-        <div className="graph" hidden={true}>
+        <div className="graph">
+          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            <div>
+              <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Nutritional value</h3>
+              <p style={{margin: "0", fontSize: "12px"}}>Of a recently consumed item</p>
+            </div>
+            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
+              <Select
+                style={{ margin: "10px" }}
+                label="Meals to Include"
+                onChange={(e) => {
+                  setMealForGraph2(e.target.value);
+                }}
+              >
+                {listOfMeals &&
+                  listOfMeals.map((meal) => (
+                    <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
+                  ))}
+              </Select>
+              <Button
+                onClick={() => {
+                  setMealChartData(mealForGraph2);
+                }}
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
           <Custom_Chart
             data={barChartData}
             graphType={"BarChart"}
@@ -202,59 +254,6 @@ export const Home = () => {
         </div>
       </div>
       <div className="graph-options">
-        <div className="graph-options-container">
-          <p>Configure Meals Over Time Graph</p>
-          <div>
-            <Checkbox /> Show Total Lipid (Fat)
-            <Checkbox /> Show Protein
-            <Checkbox /> Show Carbs
-            <Select
-              style={{ margin: "10px" }}
-              value={timePeriod}
-              label="Time Period"
-              onChange={(e) => {
-                setTimePeriod(e.target.value);
-              }}
-            >
-              <MenuItem value={"day"}>Day</MenuItem>
-              <MenuItem value={"week"}>Week</MenuItem>
-              <MenuItem value={"month"}>Month</MenuItem>
-              <MenuItem value={"year"}>Year</MenuItem>
-            </Select>
-            <Button
-              onClick={() => {
-                setLoadChartData(true);
-              }}
-            >
-              Submit
-            </Button>
-          </div>
-          <p>Configure Meals Chart</p>
-          <div>
-            <Checkbox /> Show Total Lipid (Fat)
-            <Checkbox /> Show Protein
-            <Checkbox /> Show Carbs
-            <Select
-              style={{ margin: "10px" }}
-              label="Meals to Include"
-              onChange={(e) => {
-                setMealForGraph2(e.target.value);
-              }}
-            >
-              {listOfMeals &&
-                listOfMeals.map((meal) => (
-                  <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
-                ))}
-            </Select>
-            <Button
-              onClick={() => {
-                setMealChartData(mealForGraph2);
-              }}
-            >
-              Submit
-            </Button>
-          </div>
-        </div>
         <div className="recommendations-container">
           <h3 style={{ textAlign: "left" }}>Current Recommendations</h3>
           <p>
