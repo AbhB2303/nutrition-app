@@ -6,9 +6,10 @@ import { TransitionsModal } from "../../Components/Modal/TransitionsModal";
 import { RecordModal } from "../../Components/Modal/RecordModal";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Custom_Chart } from "../../Components/Chart";
-import { Checkbox } from "@mui/material";
 import { Select } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -17,19 +18,12 @@ export const Home = () => {
   const [listOfMeals, setListOfMeals] = useState(null);
   const [mealForGraph2, setMealForGraph2] = useState("");
   const [recordedMeals, setRecordedMeals] = useState([]); // [mealName, mealNutritionInfo]
-  const [timePeriod, setTimePeriod] = useState("day");
+  const [timePeriod, setTimePeriod] = useState("");
   const { user } = useAuth0();
   const [openRecord, setOpenRecord] = useState(false);
   const [tableData, setTableData] = useState(null);
-  const [barChartData, setBarchartData] = useState([
-    ["Quantity (grams)", "Protein", "Fat", "Carbs"],
-    ["Test", 0, 0, 0],
-  ]);
-  const [lineChartData, setLineChartData] = useState([
-    ["Date", "Protein", "Fat", "Carbs"],
-    // [full date and time in dayjs format, protein, fat, carbs]
-    [0, 30, 40, 50],
-  ]);
+  const [barChartData, setBarchartData] = useState([]);
+  const [lineChartData, setLineChartData] = useState([]);
   const [loadChartData, setLoadChartData] = useState(false);
 
   const LineChartOptions = {
@@ -137,6 +131,7 @@ export const Home = () => {
       });
   }, []);
 
+  // loads line chart data on button click
   useEffect(() => {
     axios
       .get(
@@ -226,21 +221,27 @@ export const Home = () => {
                 backgroundColor: "white",
               }}
             >
-              <Select
-                style={{ margin: "10px", width: "100px" }}
-                value={timePeriod}
-                placeholder="Time Period"
-                label="Time Period"
-                variant="outlined"
-                onChange={(e) => {
-                  setTimePeriod(e.target.value);
-                }}
-              >
-                <MenuItem value={"day"}>Day</MenuItem>
-                <MenuItem value={"week"}>Week</MenuItem>
-                <MenuItem value={"month"}>Month</MenuItem>
-                <MenuItem value={"year"}>Year</MenuItem>
-              </Select>
+              <FormControl>
+                <InputLabel
+                  id="select-helper-label-line"
+                  style={{ margin: "10px", width: "100px" }}
+                >
+                  Time Period
+                </InputLabel>
+                <Select
+                  style={{ margin: "20px", width: "150px" }}
+                  value={timePeriod}
+                  InputLabel="select-helper-label-line"
+                  onChange={(e) => {
+                    setTimePeriod(e.target.value);
+                  }}
+                >
+                  <MenuItem value={"day"}>Day</MenuItem>
+                  <MenuItem value={"week"}>Week</MenuItem>
+                  <MenuItem value={"month"}>Month</MenuItem>
+                  <MenuItem value={"year"}>Year</MenuItem>
+                </Select>
+              </FormControl>
               <Button
                 onClick={() => {
                   setLoadChartData(!loadChartData);
@@ -280,18 +281,27 @@ export const Home = () => {
                 backgroundColor: "white",
               }}
             >
-              <Select
-                style={{ margin: "10px", width: "100px" }}
-                label="Meals to Include"
-                onChange={(e) => {
-                  setMealForGraph2(e.target.value);
-                }}
-              >
-                {listOfMeals &&
-                  listOfMeals.map((meal) => (
-                    <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
-                  ))}
-              </Select>
+              <FormControl>
+                <InputLabel
+                  id="select-helper-label-bar"
+                  style={{ margin: "10px", width: "100px" }}
+                >
+                  Meal
+                </InputLabel>
+                <Select
+                  style={{ margin: "20px", width: "100px" }}
+                  value={mealForGraph2}
+                  labelId="select-helper-label-bar"
+                  onChange={(e) => {
+                    setMealForGraph2(e.target.value);
+                  }}
+                >
+                  {listOfMeals &&
+                    listOfMeals.map((meal) => (
+                      <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
               <Button
                 onClick={() => {
                   setMealChartData(mealForGraph2);
@@ -369,9 +379,9 @@ export const Home = () => {
                   }}
                 >
                   <td>{meal.meal.MealName}</td>
-                  <td>{meal.nutrients.Protein}</td>
+                  <td>{meal.nutrients["Protein"]}</td>
                   <td>{meal.nutrients["Iron, Fe"]}</td>
-                  <td>{meal.nutrients.Energy}</td>
+                  <td>{meal.nutrients["Energy"]}</td>
                   <td>{meal.nutrients["Vitamin D"]}</td>
                 </tr>
               );
