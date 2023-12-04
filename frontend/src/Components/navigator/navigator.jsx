@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "@mui/material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import Logo from "../Logo";
@@ -32,6 +33,13 @@ export const Navigator = () => {
               justifyContent: "space-between",
             }}
           >
+            <Button
+              startIcon={<AccountCircleIcon />}
+              color="inherit"
+              onClick={() => navigate("/home")}
+            >
+              Dashboard
+            </Button>
             <Button
               startIcon={<AccountCircleIcon />}
               color="inherit"

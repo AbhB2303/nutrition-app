@@ -181,7 +181,7 @@ export const Home = () => {
               openRecordMealModal();
             }}
           >
-            Record a new meal
+            Record a Meal
           </Button>
           <Button
             variant="contained"
