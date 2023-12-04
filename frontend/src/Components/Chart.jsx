@@ -10,7 +10,7 @@ export const Custom_Chart = ({ data, graphType, options }) => {
           data={data}
           options={options}
           height={"50vh"}
-          width={"45vw"}
+          // width={"45vw"}
         />
       </div>
       {/* <div

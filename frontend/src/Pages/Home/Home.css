@@ -36,11 +36,12 @@
     align-items: left;
     text-align: left;
     border: 0.01rem rgb(214, 214, 214) solid;
+    border-radius: 15px;
     margin: 1rem;
     padding: 1rem;
-    width: 35%;
-    height: 38vh;
+    width: 50%;
     box-shadow: 0 2px 3px #ccc;
+    background-image: linear-gradient(to bottom right, rgb(214 255 201),rgb(242 255 213));
 }
 
 .side-bar-item {
@@ -67,8 +68,8 @@
 }
 
 .home-body {
-    display: inline-flex;
-    flex-direction: row;
+    display: flex;
+    flex-direction: column;
     /* width: 99%; */
     justify-content: space-around;
 
@@ -86,7 +87,7 @@
     flex-direction: column;
     border: 2px solid #ccc;
     box-shadow: 0 2px 3px #ccc;
-    width: 50wv;
+    width: 50%;
     margin: 1rem;
     height: 100%;
     background-color: white;

@@ -183,78 +183,98 @@ export const Home = () => {
       </div>
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
-        <div className="graph">
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-            <div>
-              <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Overall nutritional value over time</h3>
-              <p style={{margin: "0", fontSize: "12px"}}>For the past {timePeriod}</p>
-            </div>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
-              <Select
-                style={{ margin: "10px" }}
-                value={timePeriod}
-                label="Time Period"
-                onChange={(e) => {
-                  setTimePeriod(e.target.value);
-                }}
-              >
-                <MenuItem value={"day"}>Day</MenuItem>
-                <MenuItem value={"week"}>Week</MenuItem>
-                <MenuItem value={"month"}>Month</MenuItem>
-                <MenuItem value={"year"}>Year</MenuItem>
-              </Select>
-              <Button
-                onClick={() => {
-                  setLoadChartData(true);
-                }}
-              >
-                Submit
-              </Button>
-            </div>
+        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+          <div className="recommendations-container">
+            <h3 style={{ textAlign: "left" }}>Recommendation 1</h3>
+            <p>
+              {" "}
+              Looks like your protien intake is low. Try adding more protien to
+              your meals.
+            </p>
           </div>
-          <Custom_Chart
-            data={lineChartData}
-            graphType={"LineChart"}
-            options={LineChartOptions}
-          />
+          <div className="recommendations-container">
+            <h3 style={{ textAlign: "left" }}>Recommendation 2</h3>
+            <p>
+              {" "}
+              Looks like your fat intake is high. Try adding less fat to your
+              meals.
+            </p>
+          </div>
         </div>
-        <div className="graph">
-          <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-            <div>
-              <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Nutritional value</h3>
-              <p style={{margin: "0", fontSize: "12px"}}>Of a recently consumed item</p>
+        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+          <div className="graph">
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+              <div>
+                <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Overall nutritional value over time</h3>
+                <p style={{margin: "0", fontSize: "12px"}}>For the past {timePeriod}</p>
+              </div>
+              <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
+                <Select
+                  style={{ margin: "10px" }}
+                  value={timePeriod}
+                  label="Time Period"
+                  onChange={(e) => {
+                    setTimePeriod(e.target.value);
+                  }}
+                >
+                  <MenuItem value={"day"}>Day</MenuItem>
+                  <MenuItem value={"week"}>Week</MenuItem>
+                  <MenuItem value={"month"}>Month</MenuItem>
+                  <MenuItem value={"year"}>Year</MenuItem>
+                </Select>
+                <Button
+                  onClick={() => {
+                    setLoadChartData(true);
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
             </div>
-            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
-              <Select
-                style={{ margin: "10px" }}
-                label="Meals to Include"
-                onChange={(e) => {
-                  setMealForGraph2(e.target.value);
-                }}
-              >
-                {listOfMeals &&
-                  listOfMeals.map((meal) => (
-                    <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
-                  ))}
-              </Select>
-              <Button
-                onClick={() => {
-                  setMealChartData(mealForGraph2);
-                }}
-              >
-                Submit
-              </Button>
-            </div>
+            <Custom_Chart
+              data={lineChartData}
+              graphType={"LineChart"}
+              options={LineChartOptions}
+            />
           </div>
-          <Custom_Chart
-            data={barChartData}
-            graphType={"BarChart"}
-            options={BarChartoptions}
-          />
+          <div className="graph">
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+              <div>
+                <h3 style={{fontSize: "20px", marginBottom: "3px"}}>Nutritional value</h3>
+                <p style={{margin: "0", fontSize: "12px"}}>Of a recently consumed item</p>
+              </div>
+              <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end", backgroundColor: "white"}}>
+                <Select
+                  style={{ margin: "10px" }}
+                  label="Meals to Include"
+                  onChange={(e) => {
+                    setMealForGraph2(e.target.value);
+                  }}
+                >
+                  {listOfMeals &&
+                    listOfMeals.map((meal) => (
+                      <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
+                    ))}
+                </Select>
+                <Button
+                  onClick={() => {
+                    setMealChartData(mealForGraph2);
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
+            </div>
+            <Custom_Chart
+              data={barChartData}
+              graphType={"BarChart"}
+              options={BarChartoptions}
+            />
+          </div>
         </div>
       </div>
       <div className="graph-options">
-        <div className="recommendations-container">
+        {/* <div className="recommendations-container">
           <h3 style={{ textAlign: "left" }}>Current Recommendations</h3>
           <p>
             {" "}
@@ -266,7 +286,7 @@ export const Home = () => {
             Looks like your fat intake is high. Try adding less fat to your
             meals.
           </p>
-        </div>
+        </div> */}
         <div className="meals-saved-list">
           {listOfMeals && (
             <MealsList
