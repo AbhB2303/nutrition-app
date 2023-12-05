@@ -3,7 +3,7 @@ import { Chart } from "react-google-charts";
 
 export const Custom_Chart = ({ data, graphType, options, message }) => {
   return (
-    <div hidden={data.length === 0}>
+    <div hidden={data.length <= 1}>
       <div>
         <Chart
           chartType={graphType}

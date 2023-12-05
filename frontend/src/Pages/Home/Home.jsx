@@ -17,23 +17,25 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
+import { Recommendations } from "../../Components/Recommendations/Recommendations";
 
 export const Home = () => {
   const [open, setOpen] = useState(false);
   const [listOfMeals, setListOfMeals] = useState(null);
   const [mealForGraph2, setMealForGraph2] = useState("");
-  const [recordedMeals, setRecordedMeals] = useState([]); // [mealName, mealNutritionInfo]
-  const [timePeriod, setTimePeriod] = useState("");
+  const [recordedMeals, setRecordedMeals] = useState([]);
   const { user } = useAuth0();
   const [openRecord, setOpenRecord] = useState(false);
+  // store nutrient data
   const [tableData, setMealNutrientData] = useState(null);
   const [barChartData, setBarchartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
-  const [loadChartData, setLoadChartData] = useState(false);
+  const [RecommendationsData, setRecommendationsData] = useState([]); 
   // states to handle feedback messages
   const [severityOfMessage, setSeverityOfMessage] = useState(null);
   const [message, setMessage] = useState("");
   const [messageOpen, setMessageOpen] = useState(true);
+  
 
   const LineChartOptions = {
     title: "Nutritional Value Of All Meals Over Time",
@@ -143,6 +145,10 @@ export const Home = () => {
       const listOfMeals = tableData.map((meal) => {
         return meal.meal;
       });
+      const RecommendationsData = tableData.map((meal) => {
+        return [meal.meal, meal.nutrients];
+      });
+      setRecommendationsData(RecommendationsData);
       setListOfMeals(listOfMeals);
     }
   }, [tableData]);
@@ -214,8 +220,9 @@ export const Home = () => {
           ];
           ChartData.push(Data);
         }
-        setLineChartData(ChartData);
-        console.log("ChartData", ChartData);
+        if (ChartData !== ChartHeader) {
+          setLineChartData(ChartData);
+        }
       })
       .finally(() => {
         setMessage("Data retrieved, please wait as your chart loads.");
@@ -264,9 +271,6 @@ export const Home = () => {
               <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
                 Overall nutritional value over time
               </h3>
-              <p style={{ margin: "0", fontSize: "12px" }}>
-                For the past {timePeriod}
-              </p>
             </div>
             <div
               style={{
@@ -347,17 +351,7 @@ export const Home = () => {
       </div>
       <div className="graph-options">
         <div className="recommendations-container">
-          <h3 style={{ textAlign: "left" }}>Current Recommendations</h3>
-          <p>
-            {" "}
-            Looks like your protien intake is low. Try adding more protien to
-            your meals.
-          </p>
-          <p>
-            {" "}
-            Looks like your fat intake is high. Try adding less fat to your
-            meals.
-          </p>
+          <Recommendations data={RecommendationsData} />
         </div>
         <div className="meals-saved-list">
           {listOfMeals && (
