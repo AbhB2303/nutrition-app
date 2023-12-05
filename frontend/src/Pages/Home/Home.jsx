@@ -184,24 +184,6 @@ export const Home = () => {
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-          <div className="recommendations-container">
-            <h3 style={{ textAlign: "left" }}>Recommendation 1</h3>
-            <p>
-              {" "}
-              Looks like your protien intake is low. Try adding more protien to
-              your meals.
-            </p>
-          </div>
-          <div className="recommendations-container">
-            <h3 style={{ textAlign: "left" }}>Recommendation 2</h3>
-            <p>
-              {" "}
-              Looks like your fat intake is high. Try adding less fat to your
-              meals.
-            </p>
-          </div>
-        </div>
-        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
           <div className="graph">
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
               <div>
@@ -287,6 +269,24 @@ export const Home = () => {
             meals.
           </p>
         </div> */}
+        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+          <div className="recommendations-container">
+            <h3 style={{ textAlign: "left" }}>Recommendation 1</h3>
+            <p>
+              {" "}
+              Looks like your protien intake is low. Try adding more protien to
+              your meals.
+            </p>
+          </div>
+          <div className="recommendations-container">
+            <h3 style={{ textAlign: "left" }}>Recommendation 2</h3>
+            <p>
+              {" "}
+              Looks like your fat intake is high. Try adding less fat to your
+              meals.
+            </p>
+          </div>
+        </div>
         <div className="meals-saved-list">
           {listOfMeals && (
             <MealsList
