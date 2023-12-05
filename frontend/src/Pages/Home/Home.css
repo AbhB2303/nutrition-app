@@ -89,8 +89,15 @@
     box-shadow: 0 2px 3px #ccc;
     width: 50%;
     margin: 1rem;
-    height: 100%;
     background-color: white;
     border-radius: 12px;
     padding: 0 1rem 0 1rem;
+}
+
+.table {
+    width: 100%;
+}
+
+.table-container {
+    margin: 1rem;
 }

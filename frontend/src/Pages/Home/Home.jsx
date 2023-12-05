@@ -17,6 +17,13 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 export const Home = () => {
   const [open, setOpen] = useState(false);
@@ -252,116 +259,7 @@ export const Home = () => {
       </div>
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
-      <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-        <div className="graph">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
-                Overall nutritional value over time
-              </h3>
-              <p style={{ margin: "0", fontSize: "12px" }}>
-                For the past {timePeriod}
-              </p>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                backgroundColor: "white",
-              }}
-            ></div>
-          </div>
-          <Custom_Chart
-            data={lineChartData}
-            graphType={"LineChart"}
-            options={LineChartOptions}
-          />
-        </div>
-        <div className="graph">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
-                Nutritional value
-              </h3>
-              <p style={{ margin: "0", fontSize: "12px" }}>
-                Of a recently consumed item
-              </p>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                backgroundColor: "white",
-              }}
-            >
-              <FormControl>
-                <InputLabel
-                  id="select-helper-label-bar"
-                  style={{ margin: "10px", width: "100px" }}
-                >
-                  Meal
-                </InputLabel>
-                <Select
-                  style={{ margin: "20px", width: "100px" }}
-                  value={mealForGraph2}
-                  labelId="select-helper-label-bar"
-                  onChange={(e) => {
-                    setMealForGraph2(e.target.value);
-                  }}
-                >
-                  {listOfMeals &&
-                    listOfMeals.map((meal) => (
-                      <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-              <Button
-                disabled={!mealForGraph2 || mealForGraph2 === "" || !tableData}
-                onClick={() => {
-                  setMealChartData(mealForGraph2);
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </div>
-          <Custom_Chart
-            data={barChartData}
-            graphType={"BarChart"}
-            options={BarChartoptions}
-          />
-          </div>
-        </div>
-      </div>
-      <div className="graph-options">
-        {/* <div className="recommendations-container">
-          <h3 style={{ textAlign: "left" }}>Current Recommendations</h3>
-          <p>
-            {" "}
-            Looks like your protien intake is low. Try adding more protien to
-            your meals.
-          </p>
-          <p>
-            {" "}
-            Looks like your fat intake is high. Try adding less fat to your
-            meals.
-          </p>
-        </div> */}
-        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <div className="recommendations-container">
             <h3 style={{ textAlign: "left" }}>Recommendation 1</h3>
             <p>
@@ -379,107 +277,185 @@ export const Home = () => {
             </p>
           </div>
         </div>
-        <div className="meals-saved-list">
-          {listOfMeals && (
-            <MealsList
-              ListOfMeals={listOfMeals}
-              setListOfMeals={setListOfMeals}
-            />
-          )}
-        </div>
-      </div>
-
-      {tableData && (
-        <table className="table">
-          <thead>
-            <tr
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <div className="graph">
+            <div
               style={{
-                backgroundColor: "white",
-                color: "black",
-                fontWeight: "bold",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <th>Meal Name</th>
-              <th>Protein</th>
-              <th>Fat</th>
-              <th>Carbs</th>
-              <th>Iron</th>
-              <th>Vit. D</th>
-              <th>Vit. B-12</th>
-              <th>Vit. B-6</th>
-              <th>Copper</th>
-              <th>Zinc</th>
-            </tr>
-          </thead>
-          <tbody
-            style={{
-              overflowY: "scroll",
-              height: "200px",
-              border: "1px solid black",
-              textAlign: "center",
-            }}
-            className="table-body"
-          >
-            {" "}
-            {tableData.map((meal) => {
-              return (
-                <tr
+              <div>
+                <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
+                  Overall nutritional value over time
+                </h3>
+                <p style={{ margin: "0", fontSize: "12px" }}>
+                  For the past {timePeriod}
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  backgroundColor: "white",
+                }}
+              ></div>
+            </div>
+            <Custom_Chart
+              data={lineChartData}
+              graphType={"LineChart"}
+              options={LineChartOptions}
+            />
+          </div>
+          <div className="graph">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
+                  Nutritional value
+                </h3>
+                <p style={{ margin: "0", fontSize: "12px" }}>
+                  Of a recently consumed item
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  backgroundColor: "white",
+                }}
+              >
+                <FormControl>
+                  <InputLabel
+                    id="select-helper-label-bar"
+                    style={{ margin: "10px", width: "100px" }}
+                  >
+                    Meal
+                  </InputLabel>
+                  <Select
+                    style={{ margin: "20px", width: "100px" }}
+                    value={mealForGraph2}
+                    labelId="select-helper-label-bar"
+                    onChange={(e) => {
+                      setMealForGraph2(e.target.value);
+                    }}
+                  >
+                    {listOfMeals &&
+                      listOfMeals.map((meal) => (
+                        <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  disabled={!mealForGraph2 || mealForGraph2 === "" || !tableData}
+                  onClick={() => {
+                    setMealChartData(mealForGraph2);
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
+            </div>
+            <Custom_Chart
+              data={barChartData}
+              graphType={"BarChart"}
+              options={BarChartoptions}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="table-container">
+        <TableContainer component={Paper}>
+          {tableData && (
+            <Table className="table">
+              <TableHead>
+                <TableRow
                   style={{
                     backgroundColor: "white",
                     color: "black",
-                    fontWeight: "bold",
+                    fontWeight: "bold"
                   }}
                 >
-                  <td>{meal.meal.MealName}</td>
-                  <td>
-                    {meal.nutrients["Protein"] ? meal.nutrients["Protein"] : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Total lipid (fat)"]
-                      ? meal.nutrients["Total lipid (fat)"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Carbohydrate, by difference"]
-                      ? meal.nutrients["Carbohydrate, by difference"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Iron, Fe"]
-                      ? meal.nutrients["Iron, Fe"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Vitamin D"]
-                      ? meal.nutrients["Vitamin D"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Vitamin B-12"]
-                      ? meal.nutrients["Vitamin B-12"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Vitamin B-6"]
-                      ? meal.nutrients["Vitamin B-6"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Copper, Cu"]
-                      ? meal.nutrients["Copper, Cu"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Zinc, Zn"]
-                      ? meal.nutrients["Zinc, Zn"]
-                      : 0}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
+                  <TableCell style={{ fontWeight: "bold" }}>Meal Name</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Protein</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Fat</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Carbs</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Iron</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Vit. D</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Vit. B-12</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Vit. B-6</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Copper</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Zinc</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className="table-body">
+                {" "}
+                {tableData.map((meal) => {
+                  return (
+                    <TableRow
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell>{meal.meal.MealName}</TableCell>
+                      <TableCell>
+                        {meal.nutrients["Protein"] ? meal.nutrients["Protein"] : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Total lipid (fat)"]
+                          ? meal.nutrients["Total lipid (fat)"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Carbohydrate, by difference"]
+                          ? meal.nutrients["Carbohydrate, by difference"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Iron, Fe"]
+                          ? meal.nutrients["Iron, Fe"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Vitamin D"]
+                          ? meal.nutrients["Vitamin D"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Vitamin B-12"]
+                          ? meal.nutrients["Vitamin B-12"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Vitamin B-6"]
+                          ? meal.nutrients["Vitamin B-6"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Copper, Cu"]
+                          ? meal.nutrients["Copper, Cu"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Zinc, Zn"]
+                          ? meal.nutrients["Zinc, Zn"]
+                          : 0}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </TableContainer>
+      </div>
+
 
       {severityOfMessage && (
         <Box sx={{ width: "100%" }}>
