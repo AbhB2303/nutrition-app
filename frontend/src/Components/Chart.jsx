@@ -1,10 +1,10 @@
 import React from "react";
 import { Chart } from "react-google-charts";
 
-export const Custom_Chart = ({ data, graphType, options }) => {
+export const Custom_Chart = ({ data, graphType, options, message }) => {
   return (
-    <div>
-      <div hidden={data.length === 0}>
+    <div hidden={data.length === 0}>
+      <div>
         <Chart
           chartType={graphType}
           data={data}

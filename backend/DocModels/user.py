@@ -7,12 +7,13 @@ from pydantic.fields import Field
 class UserModel(BaseModel):
     username: str = Field(alias="username", default="")
     email: str = Field(alias="email", default="")
-    age: int = Field(alias="age", default="")
+    age: Optional[int] = Field(alias="age", default=None)
     location: str = Field(alias="location", default="")
-    weight: int = Field(alias="weight", default="")
-    height: int = Field(alias="height", default="")
+    weight: Optional[int] = Field(alias="weight", default=None)
+    height: Optional[int] = Field(alias="height", default=None)
     id: str = Field(alias="_id", default="")
     meals: list = Field(alias="meals", default=[])
+    goals: str = Field(alias="goals", default="")
 
     def to_dict(self):
         return {
@@ -23,6 +24,7 @@ class UserModel(BaseModel):
             "weight": self.weight,
             "height": self.height,
             "meals": self.meals,
+            "goals": self.goals,
         }
 
     def __str__(self):
