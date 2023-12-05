@@ -1,5 +1,6 @@
 .App {
-  background-image: linear-gradient(white, #CEDDF9);
+  /* background-image: linear-gradient(white, #CEDDF9); */
+  background-color: #f5f8ff;
 }
 
 .container {

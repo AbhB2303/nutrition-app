@@ -16,6 +16,8 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from '@mui/icons-material/Add';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Box from "@mui/material/Box";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -236,6 +238,7 @@ export const Home = () => {
         <h1 className="home-title">Nutrition Dashboard</h1>
         <div className="home-options">
           <Button
+            startIcon={<AccessTimeIcon />}
             variant="contained"
             key="Record a new meal"
             style={{ margin: "10px" }}
@@ -246,6 +249,7 @@ export const Home = () => {
             Record a Meal
           </Button>
           <Button
+            startIcon={<AddIcon />}
             variant="contained"
             key="Create a new meal"
             style={{ margin: "10px" }}
@@ -259,6 +263,15 @@ export const Home = () => {
       </div>
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
+        <div>
+          <p> Welcome to your nutrition dashboard!</p>
+          <p>To begin, create a meal to provide us with information on your recently consumed meals.</p>
+          <p>Once that's done, you can record meals to indicate the date and time that these items were consumed.</p>
+        </div>
+        <div>
+          <h2>Recommendations</h2>
+          <p>These recommendations are provided based on your recent consumption habits.</p>
+        </div>
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <div className="recommendations-container">
             <h3 style={{ textAlign: "left" }}>Recommendation 1</h3>
@@ -277,6 +290,8 @@ export const Home = () => {
             </p>
           </div>
         </div>
+        <h2>Nutritional overview</h2>
+        <p>A visual overview is given for your nutritional value over time. Select a meal to view its specific nutritional content.</p>
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <div className="graph">
             <div
@@ -373,17 +388,13 @@ export const Home = () => {
         </div>
       </div>
       <div className="table-container">
+        <h2 style={{marginBottom: "0"}}> Recently consumed meals </h2>
+        <p>The values indicated are all listed in grams.</p>
         <TableContainer component={Paper}>
           {tableData && (
             <Table className="table">
               <TableHead>
-                <TableRow
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    fontWeight: "bold"
-                  }}
-                >
+                <TableRow>
                   <TableCell style={{ fontWeight: "bold" }}>Meal Name</TableCell>
                   <TableCell style={{ fontWeight: "bold" }}>Protein</TableCell>
                   <TableCell style={{ fontWeight: "bold" }}>Fat</TableCell>
