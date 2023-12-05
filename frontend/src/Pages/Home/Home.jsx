@@ -81,6 +81,7 @@ export const Home = () => {
       return meal.meal._id === meal_id;
     });
     const ChartData = [
+      listOfMeals.filter((meal) => { return meal._id === meal_id })[0].MealName,
       nutrients[0].nutrients["Protein"] ? nutrients[0].nutrients["Protein"] : 0,
       nutrients[0].nutrients["Total lipid (fat)"]
         ? nutrients[0].nutrients["Total lipid (fat)"]
@@ -111,6 +112,7 @@ export const Home = () => {
         : 0,
     ];
     const ChartHeader = [
+      "Meal",
       "Protein",
       "Fat",
       "Carbs",
@@ -121,10 +123,14 @@ export const Home = () => {
       "Copper",
       "Zinc",
     ];
-    for (let i = 0; i < ChartData.length; i++) {
+    const length = ChartData.length;
+    for (let i = 1; i < length; i++) {
       if (ChartData[i] === 0) {
-        ChartHeader.splice(i, 1);
-        ChartData.splice(i, 1);
+        const index = ChartData.indexOf(ChartData[i]);
+        ChartData.splice(index, 1);
+        ChartHeader.splice(index, 1);
+        i--;
+        console.log(ChartData, ChartHeader);
       }
     }
     setBarchartData([ChartHeader, ChartData]);
