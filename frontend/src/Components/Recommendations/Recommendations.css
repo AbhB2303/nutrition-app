@@ -1,0 +1,16 @@
+.recommendations-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    text-align: left;
+    border: 0.01rem rgb(214, 214, 214) solid;
+    border-radius: 15px;
+    margin: 10px;
+    padding: 2rem;
+    width: 50%;
+    box-shadow: 0 2px 3px #ccc;
+    background-image: linear-gradient(to bottom right, rgb(40 139 92),rgb(80 202 66));
+    color: white;
+    font-size: 20px;
+}

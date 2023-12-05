@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import "./Recommendations.css"
 
 export const Recommendations = ({ data }) => {
 
@@ -14,16 +15,16 @@ export const Recommendations = ({ data }) => {
                 let nutrientInfo = data[i][1]
                 Object.keys(nutrientInfo).forEach((key) => {
                     if (nutrientInfo[key] === 0) {
-                    if (key === "Protein" || key === "Total lipid (fat)" || key==="Vitamin B-12" || key === "Vitamin D" || key === "Copper, Cu" || key === "Vitamin B-6" || key === "Zinc, Zn") {
-                        Recommendations.push(`The meal ${mealInfo.MealName} is low in ${key}.`)
+                        if (key === "Protein" || key === "Total lipid (fat)" || key === "Vitamin B-12" || key === "Vitamin D" || key === "Copper, Cu" || key === "Vitamin B-6" || key === "Zinc, Zn") {
+                            Recommendations.push(`The meal ${mealInfo.MealName} is low in ${key}.`)
+                        }
+                        if (nutrientInfo[key] === 0 && key === "Carbohydrate, by difference") {
+                            Recommendations.push(`The meal ${mealInfo.MealName} is low in carbohydrates.`)
+                        }
+                        if (nutrientInfo[key] === 0 && key === "Iron, Fe") {
+                            Recommendations.push(`The meal ${mealInfo.MealName} is low in iron.`)
+                        }
                     }
-                    if (nutrientInfo[key] === 0 && key==="Carbohydrate, by difference") {
-                        Recommendations.push(`The meal ${mealInfo.MealName} is low in carbohydrates.`)
-                    }
-                    if (nutrientInfo[key] === 0 && key==="Iron, Fe") {
-                        Recommendations.push(`The meal ${mealInfo.MealName} is low in iron.`)
-                    }
-                }
                 })
             }
             console.log(Recommendations)
@@ -32,16 +33,15 @@ export const Recommendations = ({ data }) => {
             }
             else {
                 Recommendations.sort(() => Math.random() - 0.3);
-                setRecommendations(Recommendations.slice(0, 2))
+                setRecommendations(Recommendations.slice(0, 3))
             }
         }
     }, [data])
     return (
-        <div>
-            <h1>Recommendations Component</h1>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
             {recommendations.map((recommendation, index) => {
                 return (
-                    <div key={index}>
+                    <div className='recommendations-container' key={index}>
                         <p>{recommendation}</p>
                     </div>
                 )

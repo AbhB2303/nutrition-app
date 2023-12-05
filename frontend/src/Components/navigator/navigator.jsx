@@ -21,9 +21,9 @@ export const Navigator = () => {
           <Link
             underline="none"
             href="/home"
-            style={{ margin: "0.5rem", color: "#00382e", display: "flex" }}
+            style={{ margin: "0.5rem", color: "#00382e", display: "flex", fontSize: "24px" }}
           >
-            Nutrition App
+            Nutriboard
           </Link>
         </div>
         {isAuthenticated ? (

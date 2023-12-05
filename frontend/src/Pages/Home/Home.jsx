@@ -16,7 +16,16 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from '@mui/icons-material/Add';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Box from "@mui/material/Box";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { Recommendations } from "../../Components/Recommendations/Recommendations";
 
 export const Home = () => {
@@ -30,12 +39,12 @@ export const Home = () => {
   const [tableData, setMealNutrientData] = useState(null);
   const [barChartData, setBarchartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
-  const [RecommendationsData, setRecommendationsData] = useState([]); 
+  const [RecommendationsData, setRecommendationsData] = useState([]);
   // states to handle feedback messages
   const [severityOfMessage, setSeverityOfMessage] = useState(null);
   const [message, setMessage] = useState("");
   const [messageOpen, setMessageOpen] = useState(true);
-  
+
 
   const LineChartOptions = {
     title: "Nutritional Value Of All Meals Over Time",
@@ -233,9 +242,13 @@ export const Home = () => {
   return (
     <div className="home-container">
       <div className="home-header">
-        <h1 className="home-title">Nutrition Dashboard</h1>
+        <div>
+          <h1 className="home-title">Nutrition Dashboard</h1>
+          <p style={{ marginTop: "5px" }}> Welcome to your nutrition dashboard!</p>
+        </div>
         <div className="home-options">
           <Button
+            startIcon={<AccessTimeIcon />}
             variant="contained"
             key="Record a new meal"
             style={{ margin: "10px" }}
@@ -246,6 +259,7 @@ export const Home = () => {
             Record a Meal
           </Button>
           <Button
+            startIcon={<AddIcon />}
             variant="contained"
             key="Create a new meal"
             style={{ margin: "10px" }}
@@ -257,203 +271,200 @@ export const Home = () => {
           </Button>
         </div>
       </div>
+      <div>
+        <hr />
+      </div>
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
-        <div className="graph">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
-                Overall nutritional value over time
-              </h3>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                backgroundColor: "white",
-              }}
-            ></div>
-          </div>
-          <Custom_Chart
-            data={lineChartData}
-            graphType={"LineChart"}
-            options={LineChartOptions}
-          />
+        <div>
+          <p>To begin, create a meal to provide us with information on your recently consumed meals.</p>
+          <p>Once that's done, you can record meals to indicate the date and time that these items were consumed.</p>
         </div>
-        <div className="graph">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
-                Nutritional value
-              </h3>
-              <p style={{ margin: "0", fontSize: "12px" }}>
-                Of a recently consumed item
-              </p>
-            </div>
+        <div style={{margin: "1em"}}>
+          <h2 style={{marginBottom: "0"}}>Recommendations</h2>
+          <p style={{marginBottom: "0"}}>These recommendations are provided based on your recent consumption habits.</p>
+        </div>
+        <Recommendations data={RecommendationsData} />
+        <div style={{margin: "1em"}}>
+          <h2 style={{marginBottom: "0"}}>Nutritional overview</h2>
+          <p style={{marginBottom: "0"}}>A visual overview is given for your nutritional value over time. Select a meal to view its specific nutritional content.</p>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <div className="graph">
             <div
               style={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                backgroundColor: "white",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <FormControl>
-                <InputLabel
-                  id="select-helper-label-bar"
-                  style={{ margin: "10px", width: "100px" }}
-                >
-                  Meal
-                </InputLabel>
-                <Select
-                  style={{ margin: "20px", width: "100px" }}
-                  value={mealForGraph2}
-                  labelId="select-helper-label-bar"
-                  onChange={(e) => {
-                    setMealForGraph2(e.target.value);
-                  }}
-                >
-                  {listOfMeals &&
-                    listOfMeals.map((meal) => (
-                      <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-              <Button
-                disabled={!mealForGraph2 || mealForGraph2 === "" || !tableData}
-                onClick={() => {
-                  setMealChartData(mealForGraph2);
+              <div>
+                <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
+                  Overall nutritional value over time
+                </h3>
+                <p style={{ margin: "0", fontSize: "12px" }}>
+                  This data is collected using recorded meals over time.
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  backgroundColor: "white",
+                }}
+              ></div>
+            </div>
+            <Custom_Chart
+              data={lineChartData}
+              graphType={"LineChart"}
+              options={LineChartOptions}
+            />
+          </div>
+          <div className="graph">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <h3 style={{ fontSize: "20px", marginBottom: "3px" }}>
+                  Nutritional value
+                </h3>
+                <p style={{ margin: "0", fontSize: "12px" }}>
+                  Of a recently consumed item
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  backgroundColor: "white",
                 }}
               >
-                Submit
-              </Button>
-            </div>
-          </div>
-          <Custom_Chart
-            data={barChartData}
-            graphType={"BarChart"}
-            options={BarChartoptions}
-          />
-        </div>
-      </div>
-      <div className="graph-options">
-        <div className="recommendations-container">
-          <Recommendations data={RecommendationsData} />
-        </div>
-        <div className="meals-saved-list">
-          {listOfMeals && (
-            <MealsList
-              ListOfMeals={listOfMeals}
-              setListOfMeals={setListOfMeals}
-            />
-          )}
-        </div>
-      </div>
-
-      {tableData && (
-        <table className="table">
-          <thead>
-            <tr
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                fontWeight: "bold",
-              }}
-            >
-              <th>Meal Name</th>
-              <th>Protein</th>
-              <th>Fat</th>
-              <th>Carbs</th>
-              <th>Iron</th>
-              <th>Vit. D</th>
-              <th>Vit. B-12</th>
-              <th>Vit. B-6</th>
-              <th>Copper</th>
-              <th>Zinc</th>
-            </tr>
-          </thead>
-          <tbody
-            style={{
-              overflowY: "scroll",
-              height: "200px",
-              border: "1px solid black",
-              textAlign: "center",
-            }}
-            className="table-body"
-          >
-            {" "}
-            {tableData.map((meal) => {
-              return (
-                <tr
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    fontWeight: "bold",
+                <FormControl>
+                  <InputLabel
+                    id="select-helper-label-bar"
+                    style={{ margin: "10px", width: "100px" }}
+                  >
+                    Meal
+                  </InputLabel>
+                  <Select
+                    style={{ margin: "20px", width: "100px" }}
+                    value={mealForGraph2}
+                    labelId="select-helper-label-bar"
+                    onChange={(e) => {
+                      setMealForGraph2(e.target.value);
+                    }}
+                  >
+                    {listOfMeals &&
+                      listOfMeals.map((meal) => (
+                        <MenuItem value={meal._id}>{meal.MealName}</MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  disabled={!mealForGraph2 || mealForGraph2 === "" || !tableData}
+                  onClick={() => {
+                    setMealChartData(mealForGraph2);
                   }}
                 >
-                  <td>{meal.meal.MealName}</td>
-                  <td>
-                    {meal.nutrients["Protein"] ? meal.nutrients["Protein"] : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Total lipid (fat)"]
-                      ? meal.nutrients["Total lipid (fat)"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Carbohydrate, by difference"]
-                      ? meal.nutrients["Carbohydrate, by difference"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Iron, Fe"]
-                      ? meal.nutrients["Iron, Fe"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Vitamin D"]
-                      ? meal.nutrients["Vitamin D"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Vitamin B-12"]
-                      ? meal.nutrients["Vitamin B-12"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Vitamin B-6"]
-                      ? meal.nutrients["Vitamin B-6"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Copper, Cu"]
-                      ? meal.nutrients["Copper, Cu"]
-                      : 0}
-                  </td>
-                  <td>
-                    {meal.nutrients["Zinc, Zn"]
-                      ? meal.nutrients["Zinc, Zn"]
-                      : 0}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
+                  Submit
+                </Button>
+              </div>
+            </div>
+            <Custom_Chart
+              data={barChartData}
+              graphType={"BarChart"}
+              options={BarChartoptions}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="table-container">
+        <h2 style={{ marginBottom: "0" }}> Recently consumed meals </h2>
+        <p>The values indicated are all listed in grams.</p>
+        <TableContainer component={Paper}>
+          {tableData && (
+            <Table className="table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ fontWeight: "bold" }}>Meal Name</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Protein</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Fat</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Carbs</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Iron</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Vit. D</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Vit. B-12</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Vit. B-6</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Copper</TableCell>
+                  <TableCell style={{ fontWeight: "bold" }}>Zinc</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className="table-body">
+                {" "}
+                {tableData.map((meal) => {
+                  return (
+                    <TableRow
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell>{meal.meal.MealName}</TableCell>
+                      <TableCell>
+                        {meal.nutrients["Protein"] ? meal.nutrients["Protein"] : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Total lipid (fat)"]
+                          ? meal.nutrients["Total lipid (fat)"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Carbohydrate, by difference"]
+                          ? meal.nutrients["Carbohydrate, by difference"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Iron, Fe"]
+                          ? meal.nutrients["Iron, Fe"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Vitamin D"]
+                          ? meal.nutrients["Vitamin D"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Vitamin B-12"]
+                          ? meal.nutrients["Vitamin B-12"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Vitamin B-6"]
+                          ? meal.nutrients["Vitamin B-6"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Copper, Cu"]
+                          ? meal.nutrients["Copper, Cu"]
+                          : 0}
+                      </TableCell>
+                      <TableCell>
+                        {meal.nutrients["Zinc, Zn"]
+                          ? meal.nutrients["Zinc, Zn"]
+                          : 0}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </TableContainer>
+      </div>
+
 
       {severityOfMessage && (
         <Box sx={{ width: "100%" }}>
