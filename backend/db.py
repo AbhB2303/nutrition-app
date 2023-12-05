@@ -209,7 +209,7 @@ class MongoDB:
                     meal["date"].strftime("%a, %d %b %Y") + " " + meal["time"].strftime("%H:%M:%S"), '%a, %d %b %Y %H:%M:%S')
 
             # sort meals by date
-            meals = sorted(meals, key=lambda k: k['date'], reverse=True)
+            meals = sorted(meals, key=lambda k: k['date'])
 
             return jsonify(meals)
         except Exception as e:

@@ -26,23 +26,25 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Recommendations } from "../../Components/Recommendations/Recommendations";
 
 export const Home = () => {
   const [open, setOpen] = useState(false);
   const [listOfMeals, setListOfMeals] = useState(null);
   const [mealForGraph2, setMealForGraph2] = useState("");
-  const [recordedMeals, setRecordedMeals] = useState([]); // [mealName, mealNutritionInfo]
-  const [timePeriod, setTimePeriod] = useState("");
+  const [recordedMeals, setRecordedMeals] = useState([]);
   const { user } = useAuth0();
   const [openRecord, setOpenRecord] = useState(false);
+  // store nutrient data
   const [tableData, setMealNutrientData] = useState(null);
   const [barChartData, setBarchartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
-  const [loadChartData, setLoadChartData] = useState(false);
+  const [RecommendationsData, setRecommendationsData] = useState([]); 
   // states to handle feedback messages
   const [severityOfMessage, setSeverityOfMessage] = useState(null);
   const [message, setMessage] = useState("");
   const [messageOpen, setMessageOpen] = useState(true);
+  
 
   const LineChartOptions = {
     title: "Nutritional Value Of All Meals Over Time",
@@ -152,6 +154,10 @@ export const Home = () => {
       const listOfMeals = tableData.map((meal) => {
         return meal.meal;
       });
+      const RecommendationsData = tableData.map((meal) => {
+        return [meal.meal, meal.nutrients];
+      });
+      setRecommendationsData(RecommendationsData);
       setListOfMeals(listOfMeals);
     }
   }, [tableData]);
@@ -223,8 +229,9 @@ export const Home = () => {
           ];
           ChartData.push(Data);
         }
-        setLineChartData(ChartData);
-        console.log("ChartData", ChartData);
+        if (ChartData !== ChartHeader) {
+          setLineChartData(ChartData);
+        }
       })
       .finally(() => {
         setMessage("Data retrieved, please wait as your chart loads.");
@@ -387,6 +394,7 @@ export const Home = () => {
           </div>
         </div>
       </div>
+      <Recommendations data={RecommendationsData} />
       <div className="table-container">
         <h2 style={{marginBottom: "0"}}> Recently consumed meals </h2>
         <p>The values indicated are all listed in grams.</p>
