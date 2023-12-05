@@ -34,7 +34,7 @@ export const Navigator = () => {
             }}
           >
             <Button
-              startIcon={<AccountCircleIcon />}
+              startIcon={<DashboardIcon />}
               color="inherit"
               onClick={() => navigate("/home")}
             >
