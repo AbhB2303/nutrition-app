@@ -5,11 +5,25 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Label from "@mui/material/FormLabel";
 import { TextareaAutosize } from "@mui/material";
-import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
+import { Alert } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
+import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
 
 const Profile = () => {
   const [formData, setFormData] = useState({});
   const { user, isAuthenticated } = useAuth0();
+  const [message, setMessage] = useState("");
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [severityOfMessage, setSeverityOfMessage] = useState("");
+
+  // hide message after 5 seconds if shown
+  useEffect(() => {
+    setTimeout(() => {
+      setSeverityOfMessage(null);
+    }, 5000);
+  }, [severityOfMessage]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -19,7 +33,9 @@ const Profile = () => {
         .then((res) => {
           if (res.data !== null) {
             setFormData(res.data);
-            console.log("User data retrieved:", res.data);
+            setMessage("Profile loaded from database");
+            setMessageOpen(true);
+            setSeverityOfMessage("success");
           } else {
             setFormData({ username: user.name, email: user.email });
           }
@@ -57,10 +73,19 @@ const Profile = () => {
     newformData.append("goals", formData.goals);
 
     console.log("Form data submitted:", newformData);
-    axios.post(
-      `${process.env.REACT_APP_API_SERVER_URL}/create_user`,
-      newformData
-    );
+    axios
+      .post(`${process.env.REACT_APP_API_SERVER_URL}/create_user`, newformData)
+      .then((res) => {
+        if (res.status === 200) {
+          setMessage("Profile saved to database");
+          setMessageOpen(true);
+          setSeverityOfMessage("success");
+        } else {
+          setMessage("Profile failed to save to database");
+          setMessageOpen(true);
+          setSeverityOfMessage("error");
+        }
+      });
   };
 
   return (
@@ -185,6 +210,36 @@ const Profile = () => {
           </Button>
         </div>
       </div>
+      {severityOfMessage && (
+        <Box sx={{ width: "100%" }}>
+          <Collapse in={messageOpen}>
+            <Alert
+              severity={severityOfMessage}
+              style={{
+                position: "fixed",
+                bottom: "10px",
+                right: "10px",
+                width: "20%",
+                zIndex: "100",
+              }}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setMessageOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              {message}
+            </Alert>
+          </Collapse>
+        </Box>
+      )}
     </div>
   );
 };

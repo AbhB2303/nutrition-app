@@ -8,9 +8,11 @@ from DocModels.user import UserModel
 
 
 class MongoDB:
+
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)
+
         self.client = None
 
     def init_app(self, app):
@@ -25,6 +27,7 @@ class MongoDB:
         NUTRITION_DB = self.client.NutritionDB
         pipeline = [
             {"$group": {"_id": "$FdGrp_desc", "FdGrp_Cd": {"$first": "$FdGrp_Cd"}}},
+            {"$sort": {"_id": 1}},
         ]
         aggregate = NUTRITION_DB.FD_GROUP.aggregate(pipeline)
         return list(aggregate)
@@ -38,8 +41,9 @@ class MongoDB:
                 {"email": meal["email"]},
                 {"$push": {"meals": meal["_id"]}}
             )
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "Meal not saved"})
         return jsonify({"message": "Meal saved successfully"})
 
     def get_meals(self, email):
@@ -50,8 +54,9 @@ class MongoDB:
             for meal in meals:
                 meal["_id"] = str(meal["_id"])
             return list(meals)
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "Meals not found"})
 
     def get_meal(self, meal_id, email):
         NUTRITION_DB = self.client.NutritionDB
@@ -60,8 +65,9 @@ class MongoDB:
             if meal is not None:
                 meal["_id"] = str(meal["_id"])
                 return meal
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "Meal not found"})
 
     def get_ingredient_number(self, ingredient):
         NUTRITION_DB = self.client.NutritionDB
@@ -71,8 +77,9 @@ class MongoDB:
             if ingredient is not None:
                 ndb_no = ingredient["NDB_No"]
                 return ndb_no
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "Ingredient not found"})
 
     def get_nutrients(self, ingredient, weight, servings, serving_size_unit):
         NUTRITION_DB = self.client.NutritionDB
@@ -89,21 +96,23 @@ class MongoDB:
 
                 # nutr_val is the nutrient value per 100 grams,
                 # weight is the actual weight of the ingredient in grams
+                # Total = (nutr_val * weight) / 100 in grams
                 nutrient_info.append({
-                    "Total": ((float(Nutr_val) * float(weight)) / 100) * float(servings),
+                    "Total": round(((float(Nutr_val) * float(weight)) / 100) * float(servings), 2),
                     "Label": Nutr_Desc["NutrDesc"],
                     "Units": Nutr_Desc["Units"],
                 })
             info = [{'nutrient_info': nutrient_info},
                     {'serving_size': servings, 'serving_size_unit': serving_size_unit}]
             return info
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "Meal not saved"})
 
     def get_foods(self, category):
         NUTRITION_DB = self.client.NutritionDB
+        # pipeline to get all foods in a category
         pipeline = [
-            # Only include documents with FdGrp_Cd equal to the specified category
             {"$match": {"FdGrp_Cd": int(category)}},
             {"$group": {"_id": "$Long_Desc"}},
             {"$project": {
@@ -132,6 +141,7 @@ class MongoDB:
                 },
             }},
             {"$group": {"_id": "$food", "types": {"$push": "$types"}}},
+            {"$sort": {"_id": 1, "types": 1}},
         ]
         aggregate = NUTRITION_DB.FOOD_DES.aggregate(pipeline)
         return list(aggregate)
@@ -185,8 +195,8 @@ class MongoDB:
         NUTRITION_DB = self.client.NutritionDB
         try:
             NUTRITION_DB.RecordedMeals.insert_one(meal)
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)
 
     def get_recorded_meals(self, email):
         NUTRITION_DB = self.client.NutritionDB
@@ -195,14 +205,12 @@ class MongoDB:
             meals = list(meals)
             for meal in meals:
                 meal["_id"] = str(meal["_id"])
-                # remove time from date
-                meal["date"] = meal["date"].strftime("%a, %d %b %Y")
-                # remove date from time
-                meal["time"] = meal["time"].strftime("%H:%M:%S")
-                # combine and format date and time
                 meal["date"] = datetime.datetime.strptime(
-                    meal["date"] + " " + meal["time"], '%a, %d %b %Y %H:%M:%S')
+                    meal["date"].strftime("%a, %d %b %Y") + " " + meal["time"].strftime("%H:%M:%S"), '%a, %d %b %Y %H:%M:%S')
+
+            # sort meals by date
+            meals = sorted(meals, key=lambda k: k['date'], reverse=True)
 
             return jsonify(meals)
-        except DuplicateKeyError:
-            return DuplicateKeyError
+        except Exception as e:
+            print(e)

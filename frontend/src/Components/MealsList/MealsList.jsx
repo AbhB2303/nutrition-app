@@ -31,6 +31,7 @@ export const MealsList = ({ ListOfMeals }) => {
       {ListOfMeals ? (
         ListOfMeals.map((meal) => (
           <Button
+            key={meal._id}
             style={{ fontWeight: "bold", margin: "10px" }}
             onClick={() => {
               getNutritionInfo(meal._id);

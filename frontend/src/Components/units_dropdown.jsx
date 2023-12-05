@@ -6,6 +6,9 @@ import Select from "@mui/material/Select";
 
 export default function SelectSmall({ unit, setUnit, options, setUnitName }) {
   const handleChange = (event) => {
+    if (event.target.value === null) {
+      setUnitName(null);
+    }
     setUnit(event.target.value);
     console.log("event.target.value", event.target.value);
     // set unit name to the label of the selected option
@@ -22,11 +25,11 @@ export default function SelectSmall({ unit, setUnit, options, setUnitName }) {
       <Select
         labelId="demo-select-small-label"
         id="demo-select-small"
-        value={unit} // Change this to use setUnit instead of unit
+        value={unit}
         label="Unit"
         onChange={handleChange}
       >
-        <MenuItem value="">
+        <MenuItem value={null}>
           <em>None</em>
         </MenuItem>
         {options.map((option) => (
