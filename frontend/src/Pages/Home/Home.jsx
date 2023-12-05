@@ -39,12 +39,12 @@ export const Home = () => {
   const [tableData, setMealNutrientData] = useState(null);
   const [barChartData, setBarchartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
-  const [RecommendationsData, setRecommendationsData] = useState([]); 
+  const [RecommendationsData, setRecommendationsData] = useState([]);
   // states to handle feedback messages
   const [severityOfMessage, setSeverityOfMessage] = useState(null);
   const [message, setMessage] = useState("");
   const [messageOpen, setMessageOpen] = useState(true);
-  
+
 
   const LineChartOptions = {
     title: "Nutritional Value Of All Meals Over Time",
@@ -242,7 +242,10 @@ export const Home = () => {
   return (
     <div className="home-container">
       <div className="home-header">
-        <h1 className="home-title">Nutrition Dashboard</h1>
+        <div>
+          <h1 className="home-title">Nutrition Dashboard</h1>
+          <p style={{ marginTop: "5px" }}> Welcome to your nutrition dashboard!</p>
+        </div>
         <div className="home-options">
           <Button
             startIcon={<AccessTimeIcon />}
@@ -268,37 +271,25 @@ export const Home = () => {
           </Button>
         </div>
       </div>
+      <div>
+        <hr />
+      </div>
       {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
         <div>
-          <p> Welcome to your nutrition dashboard!</p>
           <p>To begin, create a meal to provide us with information on your recently consumed meals.</p>
           <p>Once that's done, you can record meals to indicate the date and time that these items were consumed.</p>
         </div>
-        <div>
-          <h2>Recommendations</h2>
-          <p>These recommendations are provided based on your recent consumption habits.</p>
+        <div style={{margin: "1em"}}>
+          <h2 style={{marginBottom: "0"}}>Recommendations</h2>
+          <p style={{marginBottom: "0"}}>These recommendations are provided based on your recent consumption habits.</p>
         </div>
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <div className="recommendations-container">
-            <h3 style={{ textAlign: "left" }}>Recommendation 1</h3>
-            <p>
-              {" "}
-              Looks like your protien intake is low. Try adding more protien to
-              your meals.
-            </p>
-          </div>
-          <div className="recommendations-container">
-            <h3 style={{ textAlign: "left" }}>Recommendation 2</h3>
-            <p>
-              {" "}
-              Looks like your fat intake is high. Try adding less fat to your
-              meals.
-            </p>
-          </div>
+        <Recommendations data={RecommendationsData} />
+        <div style={{margin: "1em"}}>
+          <h2 style={{marginBottom: "0"}}>Nutritional overview</h2>
+          <p style={{marginBottom: "0"}}>A visual overview is given for your nutritional value over time. Select a meal to view its specific nutritional content.</p>
         </div>
-        <h2>Nutritional overview</h2>
-        <p>A visual overview is given for your nutritional value over time. Select a meal to view its specific nutritional content.</p>
+
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <div className="graph">
             <div
@@ -313,7 +304,7 @@ export const Home = () => {
                   Overall nutritional value over time
                 </h3>
                 <p style={{ margin: "0", fontSize: "12px" }}>
-                  For the past {timePeriod}
+                  This data is collected using recorded meals over time.
                 </p>
               </div>
               <div
@@ -394,9 +385,8 @@ export const Home = () => {
           </div>
         </div>
       </div>
-      <Recommendations data={RecommendationsData} />
       <div className="table-container">
-        <h2 style={{marginBottom: "0"}}> Recently consumed meals </h2>
+        <h2 style={{ marginBottom: "0" }}> Recently consumed meals </h2>
         <p>The values indicated are all listed in grams.</p>
         <TableContainer component={Paper}>
           {tableData && (
