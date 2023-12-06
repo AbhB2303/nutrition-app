@@ -141,6 +141,8 @@ export const ManualCreateComponent = ({ setOpen }) => {
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
+        <h3 style={{marginTop: "0", marginBottom: "0"}}>Enter the name of your meal</h3>
+        <p style={{fontSize: "14px"}}>Eg. Pizza, Avocado toast</p>
         <div>
           <TextField
             required
@@ -150,6 +152,8 @@ export const ManualCreateComponent = ({ setOpen }) => {
           />
         </div>
 
+        <h3 style={{marginBottom: "0"}}>Ingredients</h3>
+        <p style={{fontSize: "14px", marginBottom: "0"}}>Repeat as many times to provide all ingredients.</p>
         <div
           style={{
             textAlign: "left",
