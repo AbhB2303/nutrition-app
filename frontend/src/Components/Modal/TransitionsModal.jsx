@@ -16,8 +16,8 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "80%",
   maxHeight: "70%",
+  borderRadius: "15px",
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
   overflow: "scroll",
@@ -59,6 +59,7 @@ export const TransitionsModal = ({ open, setOpen }) => {
         <Fade in={open}>
           <Box sx={style}>
             <Button
+              style={{position: "absolute", margin: "20px 10px"}}
               className="closeButton"
               onClick={() => {
                 setOpen(false);
@@ -72,9 +73,9 @@ export const TransitionsModal = ({ open, setOpen }) => {
             </Button>
             <div className="modal-header" hidden={createType !== null}>
               <div style={{ textAlign: "center" }}>
-                <h2 id="transition-modal-title">Create Food Item</h2>
+                <h2 id="transition-modal-title">Create a new meal</h2>
                 <p id="transition-modal-description">
-                  Please select a method to create a food item.
+                  Please select a method to create a new meal.
                 </p>
               </div>
               <div
