@@ -78,7 +78,9 @@ export const RecordModal = ({ open, setOpen }) => {
           "Content-Type": "multipart/form-data",
         },
       }
-    );
+    ).then(
+      window.location.reload()
+    )
     handleClose();
   };
 

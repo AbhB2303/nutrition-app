@@ -1,11 +1,11 @@
 import datetime
 from flask import jsonify
 from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
 import os
 from bson import ObjectId
 from DocModels.user import UserModel
 
+# Unique Id used is email not objectid
 
 class MongoDB:
 
@@ -22,7 +22,8 @@ class MongoDB:
 
     def get_client(self):
         return self.client
-
+    
+    # gets the broad categories to pick from
     def get_categories(self):
         NUTRITION_DB = self.client.NutritionDB
         pipeline = [
@@ -32,6 +33,7 @@ class MongoDB:
         aggregate = NUTRITION_DB.FD_GROUP.aggregate(pipeline)
         return list(aggregate)
 
+    # inserts a meal submitted by a user
     def save_meal(self, meal):
         NUTRITION_DB = self.client.NutritionDB
         try:
@@ -46,6 +48,7 @@ class MongoDB:
             return jsonify({"error": "Meal not saved"})
         return jsonify({"message": "Meal saved successfully"})
 
+    # get all the meals of a user
     def get_meals(self, email):
         NUTRITION_DB = self.client.NutritionDB
         try:
@@ -58,6 +61,7 @@ class MongoDB:
             print(e)
             return jsonify({"error": "Meals not found"})
 
+    # get a single meal for a user
     def get_meal(self, meal_id, email):
         NUTRITION_DB = self.client.NutritionDB
         try:
@@ -69,6 +73,7 @@ class MongoDB:
             print(e)
             return jsonify({"error": "Meal not found"})
 
+    # helper function: return USDA ingredient number
     def get_ingredient_number(self, ingredient):
         NUTRITION_DB = self.client.NutritionDB
         try:
@@ -81,10 +86,10 @@ class MongoDB:
             print(e)
             return jsonify({"error": "Ingredient not found"})
 
+    # get nutrients based on USDA number
     def get_nutrients(self, ingredient, weight, servings, serving_size_unit):
         NUTRITION_DB = self.client.NutritionDB
         try:
-            print(weight)
             nutrients = NUTRITION_DB.NUT_DATA.find({"NDB_No": ingredient})
             nutrients = list(nutrients)
             nutrient_info = []
@@ -109,6 +114,8 @@ class MongoDB:
             print(e)
             return jsonify({"error": "Meal not saved"})
 
+    # returns all available foods
+    # breaks USDA Long_Desc field by comma to create dict of item and types
     def get_foods(self, category):
         NUTRITION_DB = self.client.NutritionDB
         # pipeline to get all foods in a category
@@ -146,6 +153,7 @@ class MongoDB:
         aggregate = NUTRITION_DB.FOOD_DES.aggregate(pipeline)
         return list(aggregate)
 
+    # based on USDA number, returns weight in grams
     def get_serving_size(self, ndb_no):
         NUTRITION_DB = self.client.NutritionDB
         pipeline = [
@@ -155,6 +163,7 @@ class MongoDB:
         aggregate = NUTRITION_DB.WEIGHT.aggregate(pipeline)
         return list(aggregate)
 
+    # inserts user if record doesn't exist for update
     def save_user(self, user):
         NUTRITION_DB = self.client.NutritionDB
         print(user)
@@ -178,6 +187,7 @@ class MongoDB:
             print(e)
         return jsonify({"message": "User saved successfully"})
 
+    # gets user by email
     def get_user_from_email(self, email):
         NutritionDB = self.client.NutritionDB
         try:
@@ -207,8 +217,7 @@ class MongoDB:
                 meal["_id"] = str(meal["_id"])
                 meal["date"] = datetime.datetime.strptime(
                     meal["date"].strftime("%a, %d %b %Y") + " " + meal["time"].strftime("%H:%M:%S"), '%a, %d %b %Y %H:%M:%S')
-
-            # sort meals by date
+                
             meals = sorted(meals, key=lambda k: k['date'])
 
             return jsonify(meals)

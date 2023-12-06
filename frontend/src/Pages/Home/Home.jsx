@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import "./Home.css";
-import { MealsList } from "../../Components/MealsList/MealsList";
 import { TransitionsModal } from "../../Components/Modal/TransitionsModal";
 import { RecordModal } from "../../Components/Modal/RecordModal";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -107,9 +106,6 @@ export const Home = () => {
       nutrients[0].nutrients["Zinc, Zn"]
         ? nutrients[0].nutrients["Zinc, Zn"]
         : 0,
-      nutrients[0].nutrients["Iodine, I"]
-        ? nutrients[0].nutrients["Iodine, I"]
-        : 0,
     ];
     const ChartHeader = [
       "Meal",
@@ -136,7 +132,7 @@ export const Home = () => {
     setBarchartData([ChartHeader, ChartData]);
   };
 
-  // handle open modal
+  // handle open modals
   const openCreateMealModal = () => {
     setOpen(true);
   };
@@ -155,6 +151,7 @@ export const Home = () => {
       });
   }, []);
 
+  // set initial states after bulk data loads
   useEffect(() => {
     if (tableData) {
       const listOfMeals = tableData.map((meal) => {
@@ -280,7 +277,6 @@ export const Home = () => {
       <div>
         <hr />
       </div>
-      {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
         <div>
           <p>To begin, create a meal to provide us with information on your recently consumed meals.</p>
