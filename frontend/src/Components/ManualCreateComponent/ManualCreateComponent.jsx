@@ -53,10 +53,10 @@ export const ManualCreateComponent = ({ setOpen }) => {
       await axios.post(
         `${REACT_API_SERVER_URL}/save_meal/${user.email}`,
         formData
-      );
-      setOpen(false);
-      window.location.reload();
-    }
+      ).then(
+        window.location.reload()
+      )
+      setOpen(false);    }
   };
 
   const getFoodsInCategory = async (category, id) => {
@@ -79,7 +79,6 @@ export const ManualCreateComponent = ({ setOpen }) => {
     await axios
       .post(`${REACT_API_SERVER_URL}/serving_size/`, formData)
       .then((res) => {
-        console.log(res.data);
         setServingSizes(res.data);
       });
   };

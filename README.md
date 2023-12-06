@@ -2,7 +2,7 @@
 
 ## Setup Instructions
 
-The following are basic instructions on how to setup your local environment for the application designed for the final project in SOEN 357.
+The following are basic instructions on how to setup your local environment for the application designed for the final project in SOEN 357. If you would like to skip the steps for setup and directly see the website, you can check out the cloud deployment here: <https://nutrition-app-two.vercel.app/>. Please note that the cloud instance for frontend and backend are on a minimal configuration and you may experience slow loading/response times.
 
 ### Clone
 

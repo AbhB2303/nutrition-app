@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import "./Home.css";
-import { MealsList } from "../../Components/MealsList/MealsList";
 import { TransitionsModal } from "../../Components/Modal/TransitionsModal";
 import { RecordModal } from "../../Components/Modal/RecordModal";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -81,6 +80,7 @@ export const Home = () => {
       return meal.meal._id === meal_id;
     });
     const ChartData = [
+      listOfMeals.filter((meal) => { return meal._id === meal_id })[0].MealName,
       nutrients[0].nutrients["Protein"] ? nutrients[0].nutrients["Protein"] : 0,
       nutrients[0].nutrients["Total lipid (fat)"]
         ? nutrients[0].nutrients["Total lipid (fat)"]
@@ -106,11 +106,9 @@ export const Home = () => {
       nutrients[0].nutrients["Zinc, Zn"]
         ? nutrients[0].nutrients["Zinc, Zn"]
         : 0,
-      nutrients[0].nutrients["Iodine, I"]
-        ? nutrients[0].nutrients["Iodine, I"]
-        : 0,
     ];
     const ChartHeader = [
+      "Meal",
       "Protein",
       "Fat",
       "Carbs",
@@ -121,16 +119,20 @@ export const Home = () => {
       "Copper",
       "Zinc",
     ];
-    for (let i = 0; i < ChartData.length; i++) {
+    const length = ChartData.length;
+    for (let i = 1; i < length; i++) {
       if (ChartData[i] === 0) {
-        ChartHeader.splice(i, 1);
-        ChartData.splice(i, 1);
+        const index = ChartData.indexOf(ChartData[i]);
+        ChartData.splice(index, 1);
+        ChartHeader.splice(index, 1);
+        i--;
+        console.log(ChartData, ChartHeader);
       }
     }
     setBarchartData([ChartHeader, ChartData]);
   };
 
-  // handle open modal
+  // handle open modals
   const openCreateMealModal = () => {
     setOpen(true);
   };
@@ -149,6 +151,7 @@ export const Home = () => {
       });
   }, []);
 
+  // set initial states after bulk data loads
   useEffect(() => {
     if (tableData) {
       const listOfMeals = tableData.map((meal) => {
@@ -274,7 +277,6 @@ export const Home = () => {
       <div>
         <hr />
       </div>
-      {/* Mostly taken from example, needs to be customized for app */}
       <div className="home-body">
         <div>
           <p>To begin, create a meal to provide us with information on your recently consumed meals.</p>

@@ -154,7 +154,7 @@ const Profile = () => {
             required
           />
           <Label classname="label" htmlFor="Weight">
-            Weight
+            Weight (Kg)
           </Label>
           <TextField
             id="Weight"
@@ -164,7 +164,7 @@ const Profile = () => {
             required
           />
           <Label classname="label" htmlFor="Height">
-            Height
+            Height (cm)
           </Label>
           <TextField
             id="Height"
@@ -172,11 +172,6 @@ const Profile = () => {
             onChange={handleChange}
             value={formData.height}
             required
-            InputProps={{
-              inputProps: {
-                pattern: "[0-9]*", // Restrict input to numeric values
-              },
-            }}
           />
         </div>
         <div
@@ -203,7 +198,7 @@ const Profile = () => {
             type="submit"
             variant="contained"
             color="primary"
-            style={{ marginTop: "8px" }}
+            style={{ marginTop: "8px", marginBottom: "20px", marginLeft: "10px" }}
             onClick={handleSubmit}
           >
             Save Profile
